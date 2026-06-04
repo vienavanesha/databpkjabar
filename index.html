@@ -3,48 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BP Kebudayaan Jabar</title>
+    <title>SIPK - Sistem Informasi Pelestarian Kebudayaan</title>
     <link id="dynamic-favicon" rel="icon" type="image/png" href="">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Montserrat:wght=400;500;600;700&family=Roboto:wght=400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700&family=Playfair+Display:ital,wght=0,600;0,700;1,400&family=Montserrat:wght=400;500;600;700&family=Roboto:wght=400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Integrasi Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const configPath = doc(db, 'artifacts', appId, 'public', 'data', 'dashboardConfig');
-
-        signInAnonymously(auth).then(() => {
-            onSnapshot(configPath, (docSnap) => {
-                if (docSnap.exists()) {
-                    syncDashboardData(docSnap.data());
-                }
-            });
-        });
-
-        window.saveConfigToCloud = async (data) => {
-            await setDoc(configPath, data);
-        };
-    </script>
     
     <style>
         :root {
-            --primary-color: #0c2340;
-            --secondary-color: #eaaa00;
+            --primary-color: #0c2340; /* Disesuaikan dengan biru gelap logo Bisa */
+            --secondary-color: #eaaa00; /* Disesuaikan dengan aksen kuning emas logo Bisa */
+            --bg-color: #f8fafc;
+            --ui-font: 'Inter', sans-serif;
+            --title-font: 'Playfair Display', serif;
         }
+        body {
+            font-family: var(--ui-font);
+            background-color: var(--bg-color);
+        }
+        .font-heading {
+            font-family: var(--title-font);
+        }
+        .bg-custom-primary { background-color: var(--primary-color); }
+        .text-custom-primary { color: var(--primary-color); }
+        .border-custom-primary { border-color: var(--primary-color); }
+        
+        .bg-custom-secondary { background-color: var(--secondary-color); }
+        .text-custom-secondary { color: var(--secondary-color); }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
-</head><body class="text-slate-800 min-h-screen flex flex-col transition-colors duration-300">
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col transition-colors duration-300">
 
     <!-- Header / Navbar -->
     <nav class="bg-white text-slate-900 border-b border-slate-100 shadow-sm sticky top-0 z-40 transition-all duration-300">
@@ -532,7 +529,13 @@
             });
         };
 
-        function loadConfigFromLocalStorage() {
+		<!-- Bagian Akhir index.html -->
+    <script type="module">
+        // Import Firebase dari CDN
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
+        import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+        import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+		        function loadConfigFromLocalStorage() {
             const saved = localStorage.getItem('SIPK_CMS_CONFIG');
             if (saved) {
                 try {
@@ -1414,44 +1417,56 @@
             }
         }
 
-        function saveAdminCmsConfig() {
-            syncCurrentCmsDbStateFromInputs();
-            
-            CONFIG.siteName = document.getElementById('cfg-site-name').value;
-            CONFIG.subName = document.getElementById('cfg-sub-name').value;
-            
-            CONFIG.heroBadge = document.getElementById('cfg-hero-badge').value;
-            CONFIG.heroTitle = document.getElementById('cfg-hero-title').value;
-            CONFIG.heroDesc = document.getElementById('cfg-hero-desc').value;
+        // Tambahkan 'async' di depan fungsi
+window.saveAdminCmsConfig = async function() {
+    try {
+        // 1. TAMBAHKAN: Login anonim ke Firebase sebelum proses simpan
+        await signInAnonymously(auth);
 
-            CONFIG.logoText = document.getElementById('cfg-logo-text').value;
-            CONFIG.logoImage = document.getElementById('cfg-logo-image-base64').value;
-            CONFIG.faviconImage = document.getElementById('cfg-favicon-base64').value;
-            CONFIG.fontFamily = document.getElementById('cfg-font-family').value;
-            CONFIG.adminPin = document.getElementById('cfg-admin-pin').value;
-            
-            CONFIG.primaryColor = document.getElementById('cfg-color-primary').value;
-            CONFIG.secondaryColor = document.getElementById('cfg-color-secondary').value;
-            
-            localStorage.setItem('SIPK_CMS_CONFIG', JSON.stringify(CONFIG));
-            
-            applyThemeStylesAndBranding();
-            renderDashboardCards();
-            initializeAllCarousels();
-            fetchAllSpreadsheetsCountsInBackground(); 
-            
-            if (document.getElementById('view-database-page').classList.contains('hidden') === false) {
-                const activeStillExists = CONFIG.databases.some(d => d.id === currentActiveDatabaseId);
-                if (activeStillExists) {
-                    openDatabaseViewPage(currentActiveDatabaseId);
-                } else {
-                    showDashboard();
-                }
+        // 2. LOGIKA LAMA ANDA TETAP DI SINI
+        syncCurrentCmsDbStateFromInputs();
+        
+        CONFIG.siteName = document.getElementById('cfg-site-name').value;
+        CONFIG.subName = document.getElementById('cfg-sub-name').value;
+        CONFIG.heroBadge = document.getElementById('cfg-hero-badge').value;
+        CONFIG.heroTitle = document.getElementById('cfg-hero-title').value;
+        CONFIG.heroDesc = document.getElementById('cfg-hero-desc').value;
+        CONFIG.logoText = document.getElementById('cfg-logo-text').value;
+        CONFIG.logoImage = document.getElementById('cfg-logo-image-base64').value;
+        CONFIG.faviconImage = document.getElementById('cfg-favicon-base64').value;
+        CONFIG.fontFamily = document.getElementById('cfg-font-family').value;
+        CONFIG.adminPin = document.getElementById('cfg-admin-pin').value;
+        CONFIG.primaryColor = document.getElementById('cfg-color-primary').value;
+        CONFIG.secondaryColor = document.getElementById('cfg-color-secondary').value;
+        
+        localStorage.setItem('SIPK_CMS_CONFIG', JSON.stringify(CONFIG));
+        
+        applyThemeStylesAndBranding();
+        renderDashboardCards();
+        initializeAllCarousels();
+        fetchAllSpreadsheetsCountsInBackground(); 
+        
+        if (document.getElementById('view-database-page').classList.contains('hidden') === false) {
+            const activeStillExists = CONFIG.databases.some(d => d.id === currentActiveDatabaseId);
+            if (activeStillExists) {
+                openDatabaseViewPage(currentActiveDatabaseId);
+            } else {
+                showDashboard();
             }
-            
-            alert("Seluruh modifikasi konfigurasi visual, tema, teks, & pemetaan direktori database berhasil disimpan secara permanen!");
-            closeAdminModal();
         }
+
+        // 3. TAMBAHKAN: Baris ini untuk kirim data ke Firestore
+        const configRef = doc(db, 'artifacts', appId, 'public', 'data', 'siteConfig');
+        await setDoc(configRef, CONFIG);
+        
+        alert("Seluruh modifikasi telah disimpan secara permanen ke perangkat & cloud!");
+        closeAdminModal();
+        
+    } catch (error) {
+        console.error("Gagal simpan:", error);
+        alert("Gagal menyimpan ke cloud. Pastikan koneksi internet Anda stabil.");
+    }
+}
     
         function handleLogoUpload(event) {
             const file = event.target.files[0];
@@ -1484,71 +1499,12 @@
             previewCon.classList.add('hidden');
             previewCon.classList.remove('flex');
         }
-<body>
-    <!-- (Konten Asli Dashboard Anda Tetap di Sini) -->
 
-    <script>
-        // FUNGSI SINKRONISASI (Menangkap data dari Cloud)
-        function syncDashboardData(data) {
-            if (data.judul && document.getElementById('cfg-judul')) document.getElementById('cfg-judul').value = data.judul;
-            if (data.sheetUrl && document.getElementById('cfg-sheet-url')) document.getElementById('cfg-sheet-url').value = data.sheetUrl;
-            
-            if (data.logoBase64 && document.getElementById('logo-preview-img')) {
-                document.getElementById('logo-preview-img').src = data.logoBase64;
-                document.getElementById('cfg-logo-image-base64').value = data.logoBase64;
-                document.getElementById('logo-preview-container')?.classList.remove('hidden');
-                document.getElementById('logo-preview-container')?.classList.add('flex');
-            }
-            console.log("Sinkronisasi data berhasil!");
-        }
-
-        // FUNGSI SIMPAN MODIFIKASI
-        function saveDashboardConfig() {
-            // ... (Logika simpan lokal asli Anda tetap di sini) ...
-
-            // Tambahkan perintah sinkronisasi ini
-            const dataToSync = {
-                judul: document.getElementById('cfg-judul')?.value || "",
-                sheetUrl: document.getElementById('cfg-sheet-url')?.value || "",
-                logoBase64: document.getElementById('cfg-logo-image-base64')?.value || "",
-                timestamp: Date.now()
-            };
-            
-            saveConfigToCloud(dataToSync);
-            
-            alert("Data berhasil disimpan dan disinkronkan ke perangkat lain!");
-            closeAdminModal();
-        }
-
-        // FUNGSI ASLI UPLOAD LOGO
-        function handleLogoUpload(event) {
-            const file = event.target.files[0];
-            if(!file) return;
-            
-            if (file.size > 1024 * 1024) {
-                alert("Ukuran gambar terlalu besar! Maksimal 1 MB.");
-                event.target.value = "";
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64Str = e.target.result;
-                document.getElementById('cfg-logo-image-base64').value = base64Str;
-                document.getElementById('logo-preview-img').src = base64Str;
-                document.getElementById('logo-preview-container').classList.remove('hidden');
-                document.getElementById('logo-preview-container').classList.add('flex');
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function removeLogoImage() {
-            document.getElementById('cfg-logo-image-base64').value = "";
-            document.getElementById('cfg-logo-file').value = "";
-            const previewCon = document.getElementById('logo-preview-container');
-            previewCon.classList.add('hidden');
-            previewCon.classList.remove('flex');
-        }
+        // --- Logika Firebase & Sinkronisasi akan kita taruh di sini ---
+		// Langkah 4: Jalankan sinkronisasi otomatis saat aplikasi dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            loadConfigFromCloud();
+        });
     </script>
 </body>
 </html>
