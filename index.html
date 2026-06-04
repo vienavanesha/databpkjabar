@@ -53,8 +53,8 @@
                         <span id="nav-logo-text" class="text-3xl md:text-4xl">🏛️</span>
                     </div>
                     <div>
-                        <h1 id="nav-title" class="font-heading text-lg md:text-2xl font-bold tracking-tight text-[#0c2340]">Balai Pelestarian Kebudayaan Jawa Barat</h1>
-                        <p id="nav-subtitle" class="text-[10px] md:text-xs text-slate-500 font-medium tracking-wider">Kementerian Kebudayaan Republik Indonesia</p>
+                        <h1 id="nav-title" class="font-heading text-lg md:text-2xl font-bold tracking-tight text-[#0c2340]">Balai Pelestarian Kebudayaan</h1>
+                        <p id="nav-subtitle" class="text-[10px] md:text-xs text-slate-500 font-medium tracking-wider">UPT Kementerian Kebudayaan Republik Indonesia</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
@@ -74,10 +74,9 @@
             <div class="bg-gradient-to-r from-[#0c2340] via-[#1d3d63] to-[#0a1829] rounded-3xl p-8 md:p-12 text-white shadow-xl relative overflow-hidden">
                 <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
                 <div class="relative z-10 max-w-2xl space-y-4">
-                    <span id="hero-badge" class="bg-amber-500/20 text-amber-400 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider border border-amber-500/30">DATA WARISAN BUDAYA</span>
-                    <h2 id="hero-title" class="text-3xl md:text-5xl font-heading font-bold leading-tight text-slate-100">BP KEBUDAYAAN JABAR</h2>
-                    <p id="hero-desc" class="text-slate-300 text-sm md:text-base leading-relaxed">Selamat datang di Dashboard Data Warisan Budaya Jawa Barat, pusat informasi terintegrasi yang dikelola oleh Balai Pelestarian Kebudayaan Jawa Barat untuk mendukung pelestarian, pendokumentasian, dan pengembangan warisan budaya secara digital, akurat, dan berkelanjutan.
-.</p>
+                    <span id="hero-badge" class="bg-amber-500/20 text-amber-400 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider border border-amber-500/30">Pusat Data Digital</span>
+                    <h2 id="hero-title" class="text-3xl md:text-5xl font-heading font-bold leading-tight text-slate-100">Pelestarian Warisan Kebudayaan Nusantara</h2>
+                    <p id="hero-desc" class="text-slate-300 text-sm md:text-base leading-relaxed">Selamat datang di sistem manajemen data kebudayaan terintegrasi. Kelola, pantau, dan lestarikan data Cagar Budaya serta Objek Pemajuan Kebudayaan secara akurat dan real-time.</p>
                 </div>
             </div>
 
@@ -86,7 +85,7 @@
                 <div class="flex items-center justify-between">
                     <h3 class="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
                         <i class="fa-solid fa-chart-pie text-amber-600"></i>
-                        <span>Direktori Database</span>
+                        <span>Direktori Database Utama</span>
                     </h3>
                     <span class="text-xs text-slate-500 font-medium bg-slate-100 px-3 py-1 rounded-md" id="db-count-badge">7 Database Terhubung</span>
                 </div>
@@ -228,8 +227,8 @@
     </main>
 
     <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 text-center py-6 text-xs mt-12">
-        <p>&copy; 2026 Balai Pelestarian Kebudayaan Jawa Barat.</p>
-        <p class="text-slate-600 mt-1">Sistem Arsitektur Dinamis Terintegrasi Spreadsheet Cloud Server</p>
+        <p>&copy; 2026 Balai Pelestarian Kebudayaan. UPT Kementerian Kebudayaan Republik Indonesia. Seluruh hak cipta dilindungi undang-undang.</p>
+        <p class="text-slate-600 mt-1">Sistem Arsitektur Dinamis Terintegrasi Spreadsheet Cloud Server - Bebas Bug Jangka Panjang</p>
     </footer>
 
     <!-- CMS Admin Workspace Panel -->
@@ -488,13 +487,12 @@
 
         // CORE GLOBAL CONFIGURATION STATE Object Model
         var CONFIG = {
-            siteName: "Balai Pelestarian Kebudayaan Jawa Barat",
-            subName: "Kementerian Kebudayaan Republik Indonesia",
-            heroBadge: "Data Warisan Budaya",
-            heroTitle: "BP Kebudayaan Jabar",
-            heroDesc: "Selamat datang di Dashboard Data Warisan Budaya Jawa Barat, pusat informasi terintegrasi yang dikelola oleh Balai Pelestarian Kebudayaan Jawa Barat untuk mendukung pelestarian, pendokumentasian, dan pengembangan warisan budaya secara digital, akurat, dan berkelanjutan.
-.",
-            logoText: "",
+            siteName: "Balai Pelestarian Kebudayaan",
+            subName: "UPT Kementerian Kebudayaan Republik Indonesia",
+            heroBadge: "Pusat Data Digital",
+            heroTitle: "Pelestarian Warisan Kebudayaan Nusantara",
+            heroDesc: "Selamat datang di sistem manajemen data kebudayaan terintegrasi. Kelola, pantau, dan lestarikan data Cagar Budaya serta Objek Pemajuan Kebudayaan secara akurat dan real-time.",
+            logoText: "🏛️",
             logoImage: "",
             faviconImage: "",
             primaryColor: "#0c2340",
@@ -503,28 +501,22 @@
             fontFamily: "'Inter', sans-serif",
             adminPin: "1234",
             databases: [
-                { id: "odcb", name: "ODCB (Objek Diduga Cagar Budaya)", count: 0, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSeIkdXjrOLnsx8kP3CyA_dMgh3qZJnY5_InbR-bOq-K-1FVQiWexDXbSILU3p5099TNLdNe9CH9vp8/pub?gid=0&single=true&output=csv" },
-                { id: "cb-kab", name: "CB Kabupaten / Kota", count: 0, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4_TnM2YMhaQyP-E_9Z_Zc5CxR-MIiQmgV128-MfufjGOtJqHwtziFj2ZUAt-kN5540W4RwAHtx17-/pub?gid=0&single=true&output=csv" },
-                { id: "cb-prov", name: "CB Provinsi", count: 0, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGg8-akUCE1VXsqgv-rzA2OSUdrh0JEPIiA8CXnFtp6i1JdLYuGfDtqvN3Vfz9Y1mPZPf0yUBphkpq/pub?gid=1340145937&single=true&output=csv" },
-                { id: "cb-men", name: "CB Kemendikbudristek", count: 0, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSCHGDK04ml-Qhq11izBW9rJPXwu5-0oaXBa4KuS9yRykD_2yenX5DmsaYTBJBW9yZd0UdMiGRZKXzE/pub?gid=0&single=true&output=csv" },
-                { id: "cb-nas", name: "CB Nasional", count: 0, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRxUcIOL2TecbsM6WXQ8NSst1UVLYglhEcJI7-DVZGtxBgNd2T0zgnrdWqmZMAl4lop-hAcJD5kWBHL/pub?gid=0&single=true&output=csv" },
-                { id: "opk", name: "OPK (Objek Pemajuan Kebudayaan)", count: 0, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTfX4bKQIR3e5B169B_mNpbi_oRDyYeSvPkiHVByepFT8VKi1Rc8_FPQUAOmHQahKYwwdvekwCdZEtD/pub?gid=1865144211&single=true&output=csv" },
-                { id: "wbtbi", name: "WBTBI (Warisan Budaya Takbenda)", count: 0, url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRxaqwzxDPqRka-fZBTj2N1U-w25UQ3aeNc-j-FQLuKBBsu1oljRj-s7wAOm8mQXiEs9LTWbYfOoJzj/pub?gid=248675637&single=true&output=csv" }
+                { id: "odcb", name: "ODCB (Objek Diduga Cagar Budaya)", count: 328, url: "" },
+                { id: "cb-kab", name: "CB Kabupaten / Kota", count: 854, url: "" },
+                { id: "cb-prov", name: "CB Provinsi", count: 142, url: "" },
+                { id: "cb-men", name: "CB Menteri", count: 76, url: "" },
+                { id: "cb-nas", name: "CB Nasional", count: 43, url: "" },
+                { id: "opk", name: "OPK (Objek Pemajuan Kebudayaan)", count: 1105, url: "" },
+                { id: "wbtbi", name: "WBTBI (Warisan Budaya Takbenda)", count: 219, url: "" }
             ],
             gallery: {
                 cb: [
-                    { title: "Gedung BI Cirebon", url: "https://drive.google.com/file/d/1vzM7rOdRGbyrS0quGoEGACe_0aEx9JDW/view?usp=drive_link" },
-                    { title: "Candi Cangkuang", url: "https://drive.google.com/file/d/1SRmjepkyxEXgnfTg4-MNXdeHb6VscyRn/view?usp=drive_link" },
-                    { title: "Gedung Sate", url: "https://drive.google.com/file/d/1lhHCURQOnBPodZG5xq5IMqlzRgcCGNvG/view?usp=drive_link" },
-                    { title: "Gedung Perundingan Linggarjati", url: "https://drive.google.com/file/d/1uQ07EohWkn3uYgWf6ZVurbdwHSLiE3zh/view?usp=drive_link" },
-                    { title: "Prasasti Muara Cianten", url: "https://drive.google.com/file/d/1gYCqq3d2gUhL2gK1KuCvpfJuASeK9P4y/view?usp=drive_link" }
+                    { title: "Candi Jiwa Batujaya Batutulis", url: "https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=600" },
+                    { title: "Gedung Merdeka Bandung", url: "https://images.unsplash.com/photo-1590059536219-61fe36728b70?w=600" }
                 ],
                 opk: [
-                    { title: "Jaipongan", url: "https://drive.google.com/file/d/1KGpHGXFv9hBq2R5Ow7cpgmOrOVzNM0w2/view?usp=drive_link" },
-                    { title: "Karinding", url: "https://drive.google.com/file/d/16eFD3PE1XP9M5xXymnHMLo9qx3VcMurc/view?usp=drive_link" },
-                    { title: "Sisingaan", url: "https://drive.google.com/file/d/1pVMQ0gAIbaIvzBd2v8ejjBGY_gcS8pw_/view?usp=drive_link" },
-                    { title: "Leuit", url: "https://drive.google.com/file/d/1vGgQKRTllgZqzOpHmrnzwdf6G0Qei19J/view?usp=drive_link" },
-                    { title: "Sirih Pinang", url: "https://drive.google.com/file/d/1HYUZADyzeQrMOlxITLbUmlS1ma6Lh7hw/view?usp=drive_link" }
+                    { title: "Alat Musik Angklung Tradisional", url: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?w=600" },
+                    { title: "Seni Tari Merak Klasik Jabar", url: "https://images.unsplash.com/photo-1547149617-603126863073?w=600" }
                 ]
             }
         };
