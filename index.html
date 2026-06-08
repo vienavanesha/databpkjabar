@@ -573,6 +573,43 @@ async function loadConfigFromCloud() {
         return false;
     }
 }
+	async function saveConfigToCloud() {
+    try {
+        const payload = {
+            siteTitle: CONFIG.siteName,
+            heroTitle: CONFIG.heroTitle,
+            heroSubtitle: CONFIG.subName,
+            adminPin: CONFIG.adminPin,
+
+            heroBadge: CONFIG.heroBadge,
+            heroDesc: CONFIG.heroDesc,
+            logoText: CONFIG.logoText,
+            fontFamily: CONFIG.fontFamily,
+            primaryColor: CONFIG.primaryColor,
+            secondaryColor: CONFIG.secondaryColor,
+
+            logoUrl: CONFIG.logoImage,
+            faviconUrl: CONFIG.faviconImage
+        };
+
+        const response = await fetch(CMS_API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        console.log("Cloud Save Success", result);
+
+        return true;
+    } catch (error) {
+        console.error("Cloud Save Failed", error);
+        return false;
+    }
+}
         function applyThemeStylesAndBranding() {
             document.documentElement.style.setProperty('--primary-color', CONFIG.primaryColor);
             document.documentElement.style.setProperty('--secondary-color', CONFIG.secondaryColor);
@@ -1465,7 +1502,12 @@ async function loadConfigFromCloud() {
             CONFIG.primaryColor = document.getElementById('cfg-color-primary').value;
             CONFIG.secondaryColor = document.getElementById('cfg-color-secondary').value;
             
-            localStorage.setItem('SIPK_CMS_CONFIG', JSON.stringify(CONFIG));
+            localStorage.setItem(
+    'SIPK_CMS_CONFIG',
+    JSON.stringify(CONFIG)
+);
+
+saveConfigToCloud();
             
             applyThemeStylesAndBranding();
             renderDashboardCards();
