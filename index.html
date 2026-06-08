@@ -53,8 +53,8 @@
                         <span id="nav-logo-text" class="text-3xl md:text-4xl">🏛️</span>
                     </div>
                     <div>
-                        <h1 id="nav-title" class="font-heading text-lg md:text-2xl font-bold tracking-tight text-[#0c2340]">Balai Pelestarian Kebudayaan Jawa Barat</h1>
-                        <p id="nav-subtitle" class="text-[10px] md:text-xs text-slate-500 font-medium tracking-wider">Kementerian Kebudayaan Republik Indonesia</p>
+                        <h1 id="nav-title" class="font-heading text-lg md:text-2xl font-bold tracking-tight text-[#0c2340]">Balai Pelestarian Kebudayaan</h1>
+                        <p id="nav-subtitle" class="text-[10px] md:text-xs text-slate-500 font-medium tracking-wider">UPT Kementerian Kebudayaan Republik Indonesia</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
@@ -74,9 +74,9 @@
             <div class="bg-gradient-to-r from-[#0c2340] via-[#1d3d63] to-[#0a1829] rounded-3xl p-8 md:p-12 text-white shadow-xl relative overflow-hidden">
                 <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
                 <div class="relative z-10 max-w-2xl space-y-4">
-                    <span id="hero-badge" class="bg-amber-500/20 text-amber-400 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider border border-amber-500/30">Data Warisan Budaya</span>
-                    <h2 id="hero-title" class="text-3xl md:text-5xl font-heading font-bold leading-tight text-slate-100">BP Kebudayaan Jabar</h2>
-                    <p id="hero-desc" class="text-slate-300 text-sm md:text-base leading-relaxed">Selamat datang di Dashboard Data Warisan Budaya Jawa Barat, pusat informasi terintegrasi yang dikelola oleh Balai Pelestarian Kebudayaan Jawa Barat untuk mendukung pelestarian, pendokumentasian, dan pengembangan warisan budaya secara digital, akurat, dan berkelanjutan.</p>
+                    <span id="hero-badge" class="bg-amber-500/20 text-amber-400 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider border border-amber-500/30">Pusat Data Digital</span>
+                    <h2 id="hero-title" class="text-3xl md:text-5xl font-heading font-bold leading-tight text-slate-100">Pelestarian Warisan Kebudayaan Nusantara</h2>
+                    <p id="hero-desc" class="text-slate-300 text-sm md:text-base leading-relaxed">Selamat datang di sistem manajemen data kebudayaan terintegrasi. Kelola, pantau, dan lestarikan data Cagar Budaya serta Objek Pemajuan Kebudayaan secara akurat dan real-time.</p>
                 </div>
             </div>
 
@@ -227,7 +227,8 @@
     </main>
 
     <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 text-center py-6 text-xs mt-12">
-        <p>&copy; 2026 Balai Pelestarian Kebudayaan. Kementerian Kebudayaan Republik Indonesia.</p>
+        <p>&copy; 2026 Balai Pelestarian Kebudayaan. UPT Kementerian Kebudayaan Republik Indonesia. Seluruh hak cipta dilindungi undang-undang.</p>
+        <p class="text-slate-600 mt-1">Sistem Arsitektur Dinamis Terintegrasi Spreadsheet Cloud Server - Bebas Bug Jangka Panjang</p>
     </footer>
 
     <!-- CMS Admin Workspace Panel -->
@@ -237,7 +238,7 @@
                 <div class="flex items-center space-x-3">
                     <i class="fa-solid fa-sliders text-xl text-amber-400"></i>
                     <div>
-                        <h3 class="font-bold text-lg">Pusat Manajemen Sistem (CMS)</h3>
+                        <h3 class="font-bold text-lg">Pusat Manajemen Sistem Web (CMS)</h3>
                         <p class="text-xs text-slate-300">Konfigurasi UI, Warna, Font, Branding, & Pemetaan Direktori Spreadsheet</p>
                     </div>
                 </div>
@@ -429,7 +430,7 @@
                         
                         <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 text-slate-700 space-y-3">
                             <h5 class="font-bold text-sm flex items-center gap-1.5 text-indigo-900"><i class="fa-solid fa-clock-rotate-left"></i> Alur Kerja Otomatisasi Cloud Spreadsheet</h5>
-                            <p class="text-xs leading-relaxed">Dashboard ini dirancang terintegrasi <strong>100% Bebas Kuota Server</strong> dengan memanfaatkan arsitektur sinkronisasi Google Sheets. Oleh karena itu, dashboard ini tidak memiliki form input/tambah data di halaman ini.</p>
+                            <p class="text-xs leading-relaxed">Website SIPK ini dirancang terintegrasi <strong>100% Bebas Kuota Server</strong> dengan memanfaatkan arsitektur sinkronisasi Google Sheets. Oleh karena itu, website ini tidak memiliki form input/tambah data di halaman ini.</p>
                             <p class="text-xs leading-relaxed">Untuk melakukan <strong>pengisian data baru, perubahan data, ataupun penghapusan baris</strong>, Anda cukup membuka file Google Spreadsheet utama Anda di browser. Semua modifikasi yang Anda lakukan di Excel/Spreadsheet akan otomatis tampil di website dalam hitungan detik.</p>
                             <p class="text-xs leading-relaxed">Pastikan header kolom di Spreadsheet mengandung kata "kabupaten", "kota", atau "wilayah" agar filter grafik bekerja dengan sempurna.</p>
                             <div class="pt-2 flex gap-3">
@@ -450,7 +451,9 @@
 
     <script>
         // CORE GLOBAL CONFIGURATION STATE Object Model
-        let CONFIG = {
+        const CMS_API_URL =
+			"https://script.google.com/macros/s/AKfycbxZ6cTgQw129e36RWqJpfljy6d-dAFgZZuqaku-MdPoIuZ3E26seXJvhHn_UDOdPL31/exec";
+		let CONFIG = {
             siteName: "Balai Pelestarian Kebudayaan",
             subName: "UPT Kementerian Kebudayaan Republik Indonesia",
             heroBadge: "Pusat Data Digital",
@@ -465,13 +468,13 @@
             fontFamily: "'Inter', sans-serif",
             adminPin: "1234",
             databases: [
-                { id: "odcb", name: "ODCB (Objek Diduga Cagar Budaya)", count: 0, url: "" },
-                { id: "cb-kab", name: "CB Kabupaten / Kota", count: 0, url: "" },
-                { id: "cb-prov", name: "CB Provinsi", count: 0, url: "" },
-                { id: "cb-men", name: "CB Menteri", count: 0, url: "" },
-                { id: "cb-nas", name: "CB Nasional", count: 0, url: "" },
-                { id: "opk", name: "OPK (Objek Pemajuan Kebudayaan)", count: 0, url: "" },
-                { id: "wbtbi", name: "WBTBI (Warisan Budaya Takbenda)", count: 0, url: "" }
+                { id: "odcb", name: "ODCB (Objek Diduga Cagar Budaya)", count: 328, url: "" },
+                { id: "cb-kab", name: "CB Kabupaten / Kota", count: 854, url: "" },
+                { id: "cb-prov", name: "CB Provinsi", count: 142, url: "" },
+                { id: "cb-men", name: "CB Menteri", count: 76, url: "" },
+                { id: "cb-nas", name: "CB Nasional", count: 43, url: "" },
+                { id: "opk", name: "OPK (Objek Pemajuan Kebudayaan)", count: 1105, url: "" },
+                { id: "wbtbi", name: "WBTBI (Warisan Budaya Takbenda)", count: 219, url: "" }
             ],
             gallery: {
                 cb: [
@@ -512,31 +515,64 @@
         // Status Mode Input Galeri di Admin ('upload' atau 'url')
         let currentGalleryInputMethod = "upload";
 
-        window.onload = function() {
-            loadConfigFromLocalStorage();
-            applyThemeStylesAndBranding();
-            renderDashboardCards();
-            initializeAllCarousels();
-            startAutoSlideShow();
-            fetchAllSpreadsheetsCountsInBackground(); 
-            
-            document.getElementById('cfg-color-primary').addEventListener('input', (e) => {
-                document.getElementById('cfg-color-primary-text').value = e.target.value;
-            });
-            document.getElementById('cfg-color-secondary').addEventListener('input', (e) => {
-                document.getElementById('cfg-color-secondary-text').value = e.target.value;
-            });
-        };
+window.onload = async function() {
 
-        function loadConfigFromLocalStorage() {
-            const saved = localStorage.getItem('SIPK_CMS_CONFIG');
-            if (saved) {
-                try {
-                    CONFIG = Object.assign(CONFIG, JSON.parse(saved));
-                } catch(e) { console.error("Error loading local config storage data", e); }
-            }
+    // Cadangan lokal
+    loadConfigFromLocalStorage();
+
+    // Coba ambil dari Cloud
+    await loadConfigFromCloud();
+
+    applyThemeStylesAndBranding();
+    renderDashboardCards();
+    initializeAllCarousels();
+    startAutoSlideShow();
+    fetchAllSpreadsheetsCountsInBackground();
+
+    document.getElementById('cfg-color-primary').addEventListener('input', (e) => {
+        document.getElementById('cfg-color-primary-text').value = e.target.value;
+    });
+
+    document.getElementById('cfg-color-secondary').addEventListener('input', (e) => {
+        document.getElementById('cfg-color-secondary-text').value = e.target.value;
+    });
+};
+	function loadConfigFromLocalStorage() {
+		const saved = localStorage.getItem('SIPK_CMS_CONFIG');
+		if (saved) {
+        try {
+            CONFIG = Object.assign(CONFIG, JSON.parse(saved));
+        } catch(e) {
+            console.error("Error loading local config storage data", e);
+        }
+    }
+}
+
+async function loadConfigFromCloud() {
+    try {
+        const response = await fetch(CMS_API_URL);
+        const cloudConfig = await response.json();
+
+        if (!cloudConfig) return false;
+
+        if (cloudConfig.siteTitle) CONFIG.siteName = cloudConfig.siteTitle;
+        if (cloudConfig.heroTitle) CONFIG.heroTitle = cloudConfig.heroTitle;
+        if (cloudConfig.heroSubtitle) CONFIG.subName = cloudConfig.heroSubtitle;
+        if (cloudConfig.logoUrl) CONFIG.logoImage = cloudConfig.logoUrl;
+        if (cloudConfig.faviconUrl) CONFIG.faviconImage = cloudConfig.faviconUrl;
+
+        if (cloudConfig.adminPin) {
+            CONFIG.adminPin = String(cloudConfig.adminPin);
         }
 
+        console.log("CMS Cloud Loaded", cloudConfig);
+
+        return true;
+    } catch (error) {
+        console.error("Gagal memuat CMS Cloud:", error);
+        return false;
+    }
+}
         function applyThemeStylesAndBranding() {
             document.documentElement.style.setProperty('--primary-color', CONFIG.primaryColor);
             document.documentElement.style.setProperty('--secondary-color', CONFIG.secondaryColor);
