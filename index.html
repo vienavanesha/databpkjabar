@@ -614,7 +614,7 @@ async function loadConfigFromCloud() {
         return false;
     }
 }
-}
+
         function applyThemeStylesAndBranding() {
             document.documentElement.style.setProperty('--primary-color', CONFIG.primaryColor);
             document.documentElement.style.setProperty('--secondary-color', CONFIG.secondaryColor);
@@ -1564,5 +1564,37 @@ saveConfigToCloud();
             previewCon.classList.remove('flex');
         }
     </script>
+	<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc
+} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC3ewDWN8gzvoxmu_v4ThgrEInuZ1nkoQo",
+  authDomain: "dashboard-warbud-jabar.firebaseapp.com",
+  projectId: "dashboard-warbud-jabar",
+  storageBucket: "dashboard-warbud-jabar.firebasestorage.app",
+  messagingSenderId: "248205293222",
+  appId: "1:248205293222:web:9b4f592b1b34ebaa076667"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+window.firebaseDb = db;
+window.firebaseDoc = doc;
+window.firebaseGetDoc = getDoc;
+window.firebaseSetDoc = setDoc;
+
+console.log("Firebase Connected");
+
+</script>
 </body>
 </html>
