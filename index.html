@@ -459,7 +459,7 @@
             heroBadge: "Pusat Data Digital",
             heroTitle: "Pelestarian Warisan Kebudayaan Nusantara",
             heroDesc: "Selamat datang di sistem manajemen data kebudayaan terintegrasi. Kelola, pantau, dan lestarikan data Cagar Budaya serta Objek Pemajuan Kebudayaan secara akurat dan real-time.",
-            logoText: "🏛️",
+            logoText: "",
             logoImage: "",
             faviconImage: "",
             primaryColor: "#0c2340",
@@ -636,7 +636,7 @@ async function loadConfigFromCloud() {
             } else {
                 navImg.classList.add('hidden');
                 navTxt.classList.remove('hidden');
-                navTxt.innerText = CONFIG.logoText || "🏛️";
+                navTxt.innerText = CONFIG.logoText || "";
             }
             document.getElementById('db-count-badge').innerText = `${CONFIG.databases.length} Database Terhubung`;
 
@@ -1510,7 +1510,7 @@ async function loadConfigFromCloud() {
     'SIPK_CMS_CONFIG',
     JSON.stringify(CONFIG)
 );
-
+saveConfigToFirebase();
 saveConfigToCloud();
             
             applyThemeStylesAndBranding();
@@ -1610,6 +1610,33 @@ if (configSnap.exists()) {
     Object.assign(CONFIG, firebaseData);
 
     applyThemeStylesAndBranding();
+
+}
+async function saveConfigToFirebase() {
+
+    try {
+
+        const configRef = window.firebaseDoc(
+            window.firebaseDb,
+            "cms",
+            "config"
+        );
+
+        await window.firebaseSetDoc(
+            configRef,
+            CONFIG
+        );
+
+        console.log("Firebase Save Success");
+
+    } catch (err) {
+
+        console.error(
+            "Firebase Save Failed",
+            err
+        );
+
+    }
 
 }
 </script>
