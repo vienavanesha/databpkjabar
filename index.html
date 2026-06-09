@@ -1609,19 +1609,16 @@ if (configSnap.exists()) {
     console.log("Firestore Data:", firebaseData);
 
     if (firebaseData.siteName) {
-        document.getElementById('nav-title').innerText =
-            firebaseData.siteName;
+        CONFIG.siteName = firebaseData.siteName;
     }
 
     if (firebaseData.heroTitle) {
-        document.getElementById('hero-title').innerText =
-            firebaseData.heroTitle;
+        CONFIG.heroTitle = firebaseData.heroTitle;
     }
 
-} else {
-    console.log("Document tidak ditemukan");
-}
+    applyThemeStylesAndBranding();
 
+}
 </script>
 </body>
 </html>
