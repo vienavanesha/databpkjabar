@@ -1607,13 +1607,7 @@ if (configSnap.exists()) {
 
     console.log("Firestore Data:", firebaseData);
 
-    if (firebaseData.siteName) {
-        CONFIG.siteName = firebaseData.siteName;
-    }
-
-    if (firebaseData.heroTitle) {
-        CONFIG.heroTitle = firebaseData.heroTitle;
-    }
+    Object.assign(CONFIG, firebaseData);
 
     applyThemeStylesAndBranding();
 
