@@ -1594,6 +1594,19 @@ window.firebaseGetDoc = getDoc;
 window.firebaseSetDoc = setDoc;
 
 console.log("Firebase Connected");
+const configRef = window.firebaseDoc(
+  window.firebaseDb,
+  "cms",
+  "config"
+);
+
+const configSnap = await window.firebaseGetDoc(configRef);
+
+if (configSnap.exists()) {
+  console.log("Firestore Data:", configSnap.data());
+} else {
+  console.log("Document tidak ditemukan");
+}
 
 </script>
 </body>
