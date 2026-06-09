@@ -575,6 +575,7 @@ async function loadConfigFromCloud() {
 }
 	async function saveConfigToCloud() {
     try {
+
         const payload = {
             siteTitle: CONFIG.siteName,
             heroTitle: CONFIG.heroTitle,
@@ -592,23 +593,27 @@ async function loadConfigFromCloud() {
             faviconUrl: CONFIG.faviconImage
         };
 
+        const formData = new FormData();
+        formData.append("data", JSON.stringify(payload));
+
         const response = await fetch(CMS_API_URL, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
+            body: formData
         });
 
-        const result = await response.json();
+        const result = await response.text();
 
         console.log("Cloud Save Success", result);
 
         return true;
+
     } catch (error) {
+
         console.error("Cloud Save Failed", error);
+
         return false;
     }
+}
 }
         function applyThemeStylesAndBranding() {
             document.documentElement.style.setProperty('--primary-color', CONFIG.primaryColor);
