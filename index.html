@@ -1603,9 +1603,23 @@ const configRef = window.firebaseDoc(
 const configSnap = await window.firebaseGetDoc(configRef);
 
 if (configSnap.exists()) {
-  console.log("Firestore Data:", configSnap.data());
+
+    const firebaseData = configSnap.data();
+
+    console.log("Firestore Data:", firebaseData);
+
+    if (firebaseData.siteName) {
+        document.getElementById('nav-title').innerText =
+            firebaseData.siteName;
+    }
+
+    if (firebaseData.heroTitle) {
+        document.getElementById('hero-title').innerText =
+            firebaseData.heroTitle;
+    }
+
 } else {
-  console.log("Document tidak ditemukan");
+    console.log("Document tidak ditemukan");
 }
 
 </script>
