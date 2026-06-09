@@ -1612,7 +1612,7 @@ if (configSnap.exists()) {
     applyThemeStylesAndBranding();
 
 }
-async function saveConfigToFirebase() {
+window.saveConfigToFirebase = async function() {
 
     try {
 
@@ -1638,7 +1638,7 @@ async function saveConfigToFirebase() {
 
     }
 
-}
+};
 </script>
 </body>
 </html>
