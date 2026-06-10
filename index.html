@@ -1611,7 +1611,14 @@ if (configSnap.exists()) {
 
     applyThemeStylesAndBranding();
 
+    renderDashboardCards();
+
+    initializeAllCarousels();
+
+    fetchAllSpreadsheetsCountsInBackground();
+
 }
+
 window.saveConfigToFirebase = async function() {
 
     try {
