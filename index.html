@@ -262,7 +262,7 @@
                     <button id="tab-btn-ui" onclick="switchAdminTab('ui')" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition text-left bg-amber-500 text-white"><i class="fa-solid fa-palette w-5"></i> Branding & UI</button>
                     <button id="tab-btn-db" onclick="switchAdminTab('db')" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition text-left text-slate-600 hover:bg-slate-100"><i class="fa-solid fa-database w-5"></i> Link Database</button>
                     <button id="tab-btn-gal" onclick="switchAdminTab('gal')" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition text-left text-slate-600 hover:bg-slate-100"><i class="fa-solid fa-photo-film w-5"></i> Galeri Budaya</button>
-                    <button id="tab-btn-row" onclick="switchAdminTab('row')" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition text-left text-slate-600 hover:bg-slate-100"><i class="fa-solid fa-list-check w-5"></i> Manajemen Data</button>
+                    <button id="tab-btn-row" onclick="switchAdminTab('row')" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition text-left text-slate-600 hover:bg-slate-100"><i class="fa-solid fa-floppy-disk w-5"></i> Backup & Restore</button>
                 </div>
 
                 <div class="flex-grow p-6 overflow-y-auto space-y-6 bg-white font-sans text-slate-700">
@@ -425,18 +425,62 @@
                         </div>
                     </div>
 
-                    <div id="admin-tab-row" class="space-y-6 hidden">
-                        <h4 class="font-bold text-base text-slate-800 border-b border-slate-100 pb-2"><i class="fa-solid fa-list-check text-purple-500 mr-2"></i>Manajemen Input & Modifikasi Baris Data Mandiri</h4>
-                        
-                        <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 text-slate-700 space-y-3">
-                            <h5 class="font-bold text-sm flex items-center gap-1.5 text-indigo-900"><i class="fa-solid fa-clock-rotate-left"></i> Alur Kerja Otomatisasi Cloud Spreadsheet</h5>
-                            <p class="text-xs leading-relaxed">Website SIPK ini dirancang terintegrasi <strong>100% Bebas Kuota Server</strong> dengan memanfaatkan arsitektur sinkronisasi Google Sheets. Oleh karena itu, website ini tidak memiliki form input/tambah data di halaman ini.</p>
-                            <p class="text-xs leading-relaxed">Untuk melakukan <strong>pengisian data baru, perubahan data, ataupun penghapusan baris</strong>, Anda cukup membuka file Google Spreadsheet utama Anda di browser. Semua modifikasi yang Anda lakukan di Excel/Spreadsheet akan otomatis tampil di website dalam hitungan detik.</p>
-                            <p class="text-xs leading-relaxed">Pastikan header kolom di Spreadsheet mengandung kata "kabupaten", "kota", atau "wilayah" agar filter grafik bekerja dengan sempurna.</p>
-                            <div class="pt-2 flex gap-3">
-                                <a href="https://docs.google.com/spreadsheets" target="_blank" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs px-4 py-2 rounded-xl transition shadow-sm inline-flex items-center gap-1"><i class="fa-solid fa-up-right-from-square"></i> Buka Google Sheets Anda</a>
-                            </div>
-                        </div>
+ <div id="admin-tab-row" class="space-y-6 hidden">
+
+    <h4 class="font-bold text-base text-slate-800 border-b border-slate-100 pb-2">
+        <i class="fa-solid fa-floppy-disk text-emerald-500 mr-2"></i>
+        Backup & Restore Konfigurasi
+    </h4>
+
+    <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-5">
+
+        <h5 class="font-bold text-sm text-emerald-900 mb-3">
+            Backup Konfigurasi Website
+        </h5>
+
+        <p class="text-xs text-slate-600 mb-4 leading-relaxed">
+            Download seluruh konfigurasi website saat ini ke dalam file JSON.
+            File backup ini dapat digunakan untuk memulihkan konfigurasi apabila terjadi kesalahan atau perubahan yang tidak diinginkan.
+        </p>
+
+        <button onclick="exportConfigBackup()"
+            class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl text-sm font-semibold shadow-md transition flex items-center gap-2">
+            <i class="fa-solid fa-download"></i>
+            Export Config
+        </button>
+
+    </div>
+
+</div>
+
+    <div class="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+
+        <h5 class="font-bold text-sm text-blue-900 mb-3">
+            Restore Konfigurasi Website
+        </h5>
+
+        <p class="text-xs text-slate-600 mb-4 leading-relaxed">
+            Import file backup JSON untuk mengembalikan konfigurasi website.
+            Seluruh konfigurasi saat ini akan ditimpa oleh data dari file backup.
+        </p>
+
+        <button
+            onclick="document.getElementById('import-config-file').click()"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-sm font-semibold shadow-md transition flex items-center gap-2">
+            <i class="fa-solid fa-upload"></i>
+            Import Config
+        </button>
+
+        <input
+            type="file"
+            id="import-config-file"
+            accept=".json"
+            onchange="importConfigBackup(event)"
+            class="hidden">
+
+    </div>
+
+</div>                        </div>
                     </div>
 
                 </div>
