@@ -441,18 +441,31 @@
 
                 </div>
             </div>
+           <div id="admin-modal-footer" class="hidden bg-slate-50 px-6 py-4 border-t border-slate-200 flex justify-end space-x-3">
 
-            <div id="admin-modal-footer" class="hidden bg-slate-50 px-6 py-4 border-t border-slate-200 flex justify-end space-x-3">
-                <button onclick="closeAdminModal()" class="border border-slate-200 hover:bg-slate-100 text-slate-600 px-5 py-2 rounded-xl text-sm font-medium transition">Batal</button>
-                <button onclick="saveAdminCmsConfig()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-xl text-sm font-semibold shadow-md transition flex items-center gap-1.5"><i class="fa-solid fa-floppy-disk"></i> Simpan Seluruh Perubahan</button>
-            </div>
+    <button onclick="exportConfigBackup()"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-sm font-semibold shadow-md transition flex items-center gap-1.5">
+        <i class="fa-solid fa-download"></i>
+        Export Config
+    </button>
+
+    <button onclick="closeAdminModal()"
+        class="border border-slate-200 hover:bg-slate-100 text-slate-600 px-5 py-2 rounded-xl text-sm font-medium transition">
+        Batal
+    </button>
+
+    <button onclick="saveAdminCmsConfig()"
+        class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-xl text-sm font-semibold shadow-md transition flex items-center gap-1.5">
+        <i class="fa-solid fa-floppy-disk"></i>
+        Simpan Seluruh Perubahan
+    </button>
+
+</div>
         </div>
     </div>
 
     <script>
         // CORE GLOBAL CONFIGURATION STATE Object Model
-        const CMS_API_URL =
-			"https://script.google.com/macros/s/AKfycbxZ6cTgQw129e36RWqJpfljy6d-dAFgZZuqaku-MdPoIuZ3E26seXJvhHn_UDOdPL31/exec";
 		let CONFIG = {
             siteName: "Balai Pelestarian Kebudayaan",
             subName: "UPT Kementerian Kebudayaan Republik Indonesia",
@@ -519,9 +532,6 @@ window.onload = async function() {
 
     // Cadangan lokal
     // loadConfigFromLocalStorage();
-
-	// await loadConfigFromCloud();
-
     // applyThemeStylesAndBranding();
     renderDashboardCards();
     initializeAllCarousels();
@@ -546,74 +556,6 @@ window.onload = async function() {
         }
     }
 }
-
-async function loadConfigFromCloud() {
-    try {
-        const response = await fetch(CMS_API_URL);
-        const cloudConfig = await response.json();
-
-        if (!cloudConfig) return false;
-
-        if (cloudConfig.siteTitle) CONFIG.siteName = cloudConfig.siteTitle;
-        if (cloudConfig.heroTitle) CONFIG.heroTitle = cloudConfig.heroTitle;
-        if (cloudConfig.heroSubtitle) CONFIG.subName = cloudConfig.heroSubtitle;
-        if (cloudConfig.logoUrl) CONFIG.logoImage = cloudConfig.logoUrl;
-        if (cloudConfig.faviconUrl) CONFIG.faviconImage = cloudConfig.faviconUrl;
-
-        if (cloudConfig.adminPin) {
-            CONFIG.adminPin = String(cloudConfig.adminPin);
-        }
-
-        console.log("CMS Cloud Loaded", cloudConfig);
-
-        return true;
-    } catch (error) {
-        console.error("Gagal memuat CMS Cloud:", error);
-        return false;
-    }
-}
-	async function saveConfigToCloud() {
-    try {
-
-        const payload = {
-            siteTitle: CONFIG.siteName,
-            heroTitle: CONFIG.heroTitle,
-            heroSubtitle: CONFIG.subName,
-            adminPin: CONFIG.adminPin,
-
-            heroBadge: CONFIG.heroBadge,
-            heroDesc: CONFIG.heroDesc,
-            logoText: CONFIG.logoText,
-            fontFamily: CONFIG.fontFamily,
-            primaryColor: CONFIG.primaryColor,
-            secondaryColor: CONFIG.secondaryColor,
-
-            logoUrl: CONFIG.logoImage,
-            faviconUrl: CONFIG.faviconImage
-        };
-
-        const formData = new FormData();
-        formData.append("data", JSON.stringify(payload));
-
-        const response = await fetch(CMS_API_URL, {
-            method: "POST",
-            body: formData
-        });
-
-        const result = await response.text();
-
-        console.log("Cloud Save Success", result);
-
-        return true;
-
-    } catch (error) {
-
-        console.error("Cloud Save Failed", error);
-
-        return false;
-    }
-}
-
         function applyThemeStylesAndBranding() {
             document.documentElement.style.setProperty('--primary-color', CONFIG.primaryColor);
             document.documentElement.style.setProperty('--secondary-color', CONFIG.secondaryColor);
@@ -1511,7 +1453,6 @@ async function loadConfigFromCloud() {
     JSON.stringify(CONFIG)
 );
 saveConfigToFirebase();
-saveConfigToCloud();
             
             applyThemeStylesAndBranding();
             renderDashboardCards();
@@ -1646,6 +1587,41 @@ window.saveConfigToFirebase = async function() {
     }
 
 };
+function exportConfigBackup() {
+
+    const dataStr = JSON.stringify(
+        CONFIG,
+        null,
+        2
+    );
+
+    const blob = new Blob(
+        [dataStr],
+        {
+            type: "application/json"
+        }
+    );
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+
+    const now = new Date();
+
+    const filename =
+        `backup-config-${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}.json`;
+
+    a.href = url;
+    a.download = filename;
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(url);
+}
 </script>
 </body>
 </html>
