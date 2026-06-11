@@ -1641,7 +1641,50 @@ window.exportConfigBackup = function() {
 
     URL.revokeObjectURL(url);
 
-};
+}; // <-- fungsi export selesai
+window.importConfigBackup = function(event) {
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = async function(e) {
+
+        try {
+
+            const importedConfig = JSON.parse(e.target.result);
+
+            CONFIG = Object.assign(CONFIG, importedConfig);
+
+            localStorage.setItem(
+                'SIPK_CMS_CONFIG',
+                JSON.stringify(CONFIG)
+            );
+
+            await saveConfigToFirebase();
+
+            applyThemeStylesAndBranding();
+            renderDashboardCards();
+            initializeAllCarousels();
+
+            alert("Konfigurasi berhasil di-restore!");
+
+        } catch(error) {
+
+            console.error(error);
+
+            alert("File backup tidak valid.");
+
+        }
+
+    };
+
+    reader.readAsText(file);
+
+}
+
 </script>
 </body>
 </html>
