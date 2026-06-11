@@ -1657,7 +1657,7 @@ window.importConfigBackup = function(event) {
             const importedConfig = JSON.parse(e.target.result);
 
             CONFIG = Object.assign(CONFIG, importedConfig);
-
+			loadConfigFormValuesIntoCmsInputs();
             localStorage.setItem(
                 'SIPK_CMS_CONFIG',
                 JSON.stringify(CONFIG)
