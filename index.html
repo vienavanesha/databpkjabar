@@ -558,9 +558,6 @@
         let currentGalleryInputMethod = "upload";
 
 window.onload = async function() {
-
-    startAutoSlideShow();
-
     document.getElementById('cfg-color-primary').addEventListener('input', (e) => {
         document.getElementById('cfg-color-primary-text').value = e.target.value;
     });
@@ -1574,10 +1571,9 @@ if (configSnap.exists()) {
     Object.assign(CONFIG, firebaseData);
 
     applyThemeStylesAndBranding();
-
     renderDashboardCards();
-
     initializeAllCarousels();
+	startAutoSlideShow();
 
     fetchAllSpreadsheetsCountsInBackground();
 
