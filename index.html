@@ -559,13 +559,7 @@
 
 window.onload = async function() {
 
-    // Cadangan lokal
-    // loadConfigFromLocalStorage();
-    // applyThemeStylesAndBranding();
-    renderDashboardCards();
-    initializeAllCarousels();
     startAutoSlideShow();
-    fetchAllSpreadsheetsCountsInBackground();
 
     document.getElementById('cfg-color-primary').addEventListener('input', (e) => {
         document.getElementById('cfg-color-primary-text').value = e.target.value;
@@ -574,6 +568,7 @@ window.onload = async function() {
     document.getElementById('cfg-color-secondary').addEventListener('input', (e) => {
         document.getElementById('cfg-color-secondary-text').value = e.target.value;
     });
+
 };
 	function loadConfigFromLocalStorage() {
 		const saved = localStorage.getItem('SIPK_CMS_CONFIG');
@@ -1473,7 +1468,6 @@ window.onload = async function() {
             CONFIG.faviconImage = document.getElementById('cfg-favicon-base64').value;
             CONFIG.fontFamily = document.getElementById('cfg-font-family').value;
             CONFIG.adminPin = document.getElementById('cfg-admin-pin').value;
-            
             CONFIG.primaryColor = document.getElementById('cfg-color-primary').value;
             CONFIG.secondaryColor = document.getElementById('cfg-color-secondary').value;
             
