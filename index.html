@@ -1043,13 +1043,11 @@ function renderTableDataGrid(rowsArray) {
 
 const rawValue = row[header] !== undefined ? row[header] : '';
 
+
 let displayValue = String(rawValue);
 
-if (
-    typeof rawValue === 'string' &&
-    rawValue.length > 120
-) {
-    displayValue = rawValue.substring(0, 120) + '...';
+if (String(rawValue).length > 30) {
+    displayValue = String(rawValue).substring(0, 30) + '...';
 }
 
 tr += `
