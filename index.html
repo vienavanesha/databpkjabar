@@ -1041,18 +1041,20 @@ limitList.forEach(row => {
 
     headers.forEach(header => {
 
-        const rawValue = row[header] !== undefined ? row[header] : '';
+    const rawValue = row[header] !== undefined ? row[header] : '';
 
-        tr += `
-        <td class="p-4 text-sm text-slate-700 break-words max-w-md">
-            ${rawValue}
-        </td>`;
+    let cellClass = "p-4 text-sm text-slate-700 align-top";
 
-    });
+    if (
+        header.toLowerCase().includes('deskripsi')
+    ) {
+        cellClass += " break-words max-w-md text-justify";
+    }
 
-    tr += '</tr>';
-
-    tbody.innerHTML += tr;
+    tr += `
+    <td class="${cellClass}">
+        ${rawValue}
+    </td>`;
 
 });
 
