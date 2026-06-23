@@ -1029,31 +1029,41 @@ window.onload = async function() {
             theadHTML += '</tr>';
 
             table.querySelector('thead').innerHTML = theadHTML;
+const limitList = rowsArray.slice(0, 100);
 
-            const limitList = rowsArray.slice(0, 100);
+limitList.forEach(row => {
 
-            limitList.forEach(row => {
-                let tr = '<tr class="hover:bg-slate-50/80 transition-colors duration-150 border-b border-slate-100">';
-                headers.forEach(header => {
-                    const rawValue = row[header] !== undefined ? row[header] : '';
-                    const parsedValue = makeLinksClickable(rawValue);
-                    tr += `<td class="p-4 whitespace-nowrap text-sm text-slate-700">${parsedValue}</td>`;
-                });
-                tr += '</tr>';
-                tbody.innerHTML += tr;
-            });
+    let tr = '<tr class="hover:bg-slate-50/80 transition-colors duration-150 border-b border-slate-100">';
 
-            if (rowsArray.length > 100) {
-                tbody.innerHTML += `
-                    <tr>
-                        <td colspan="${headers.length}" class="p-4 text-center text-xs text-slate-400 italic bg-slate-50/50 border-t border-slate-100">
-                            Menampilkan 100 data teratas dari total ${rowsArray.length} data.
-                        </td>
-                    </tr>
-                `;
-            }
+    headers.forEach(header => {
+
+        const rawValue = row[header] !== undefined ? row[header] : '';
+
+        let displayValue = String(rawValue);
+
+        if (
+            typeof rawValue === 'string' &&
+            rawValue.length > 120
+        ) {
+            displayValue = rawValue.substring(0, 120) + '...';
         }
 
+        displayValue = makeLinksClickable(displayValue);
+
+        tr += `
+        <td
+            class="p-4 max-w-xs text-sm text-slate-700 break-words"
+            title="${String(rawValue).replace(/"/g, '&quot;')}">
+            ${displayValue}
+        </td>`;
+
+    });
+
+    tr += '</tr>';
+
+    tbody.innerHTML += tr;
+
+});
         function filterTableData() {
             const searchQuery = document.getElementById('table-search-input').value.toLowerCase();
             const filterKab = document.getElementById('table-filter-kab').value;
