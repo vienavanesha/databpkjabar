@@ -702,9 +702,23 @@ window.onload = async function() {
             return url;
         }
 
-        function handleImageError(imgElement, cat) {
+        window.handleImageError = function(imgElement, cat) {
             imgElement.onerror = null; 
-            const errorSvg = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><rect width="100%" height="100%" fill="#f1f5f9"/><path d="M300 160 l-30 40 h60 z" fill="#cbd5e1"/><circle cx="280" cy="140" r="10" fill="#cbd5e1"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="#64748b">Gambar Tidak Dapat Dimuat</text><text x="50%" y="65%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#94a3b8">Pastikan link Anda valid atau gunakan sistem upload file</text></svg>`);
+            const errorSvg = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400">
+			<rect width="100%" height="100%" fill="#f1f5f9"/>
+			<path d="M300 160 l-30 40 h60 z" fill="#cbd5e1"/>
+			<circle cx="280" cy="140" r="10" fill="#cbd5e1"/>
+			<text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" 
+			font-family="system-ui, sans-serif" font-size="16" font-weight="bold" 
+			fill="#64748b">
+			Gambar Tidak Dapat Dimuat
+			</text>
+			<text x="50%" y="65%" dominant-baseline="middle" text-anchor="middle"
+			font-family="system-ui, sans-serif" font-size="12" 
+			fill="#94a3b8">
+			Pastikan link Anda valid atau gunakan sistem upload file
+			</text>
+			</svg>`);
             imgElement.src = `data:image/svg+xml;utf8,${errorSvg}`;
         }
 
