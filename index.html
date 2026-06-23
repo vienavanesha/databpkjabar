@@ -1041,12 +1041,23 @@ function renderTableDataGrid(rowsArray) {
 
         headers.forEach(header => {
 
-            const rawValue = row[header] !== undefined ? row[header] : '';
+const rawValue = row[header] !== undefined ? row[header] : '';
 
-            tr += `
-            <td class="p-4 text-sm text-slate-700">
-                ${rawValue}
-            </td>`;
+let displayValue = String(rawValue);
+
+if (
+    typeof rawValue === 'string' &&
+    rawValue.length > 120
+) {
+    displayValue = rawValue.substring(0, 120) + '...';
+}
+
+tr += `
+<td
+    class="p-4 text-sm text-slate-700"
+    title="${String(rawValue).replace(/"/g, '&quot;')}">
+    ${displayValue}
+</td>`;
 
         });
 
@@ -1058,27 +1069,6 @@ function renderTableDataGrid(rowsArray) {
 
 } // <-- PENUTUP renderTableDataGrid ADA DI SINI
 
-
-limitList.forEach(row => {
-
-    let tr = '<tr class="hover:bg-slate-50/80 transition-colors duration-150 border-b border-slate-100">';
-
-    headers.forEach(header => {
-
-const rawValue = row[header] !== undefined ? row[header] : '';
-
-tr += `
-<td class="p-4 text-sm text-slate-700">
-    ${rawValue}
-</td>`;
-
-    });
-
-    tr += '</tr>';
-
-    tbody.innerHTML += tr;
-
-});
         function filterTableData() {
             const searchQuery = document.getElementById('table-search-input').value.toLowerCase();
             const filterKab = document.getElementById('table-filter-kab').value;
