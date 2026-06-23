@@ -1057,16 +1057,16 @@ headers.forEach(header => {
 
     const rawValue = row[header] !== undefined ? row[header] : '';
 
+    let cellClass = "p-4 text-sm text-slate-700 align-top";
+
+    if (header.toLowerCase().includes('deskripsi')) {
+        cellClass += " break-words text-justify";
+    }
+
     tr += `
-    <td class="p-4 text-sm text-slate-700 align-top break-words">
+    <td class="${cellClass}">
         ${rawValue}
     </td>`;
-
-});
-
-    tr += '</tr>';
-
-    tbody.innerHTML += tr;
 
 });
 
