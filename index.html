@@ -1038,6 +1038,7 @@ limitList.forEach(row => {
     headers.forEach(header => {
 
         const rawValue = row[header] !== undefined ? row[header] : '';
+		console.log(header, rawValue);
 
         let displayValue = String(rawValue);
 
