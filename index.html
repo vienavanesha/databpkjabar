@@ -1004,29 +1004,59 @@ window.onload = async function() {
             return text;
         }
 
-        function renderTableDataGrid(rowsArray) {
-            const tbody = document.getElementById('main-table-body');
-            const fallback = document.getElementById('table-empty-fallback');
-            const rowCountBadge = document.getElementById('table-rows-count');
-            const table = document.getElementById('main-data-table');
+function renderTableDataGrid(rowsArray) {
 
-            tbody.innerHTML = "";
-            rowCountBadge.innerText = `${rowsArray.length} Data Ditemukan`;
+    const tbody = document.getElementById('main-table-body');
+    const fallback = document.getElementById('table-empty-fallback');
+    const rowCountBadge = document.getElementById('table-rows-count');
+    const table = document.getElementById('main-data-table');
 
-            if (rowsArray.length === 0) {
-                fallback.classList.remove('hidden');
-                return;
-            }
+    tbody.innerHTML = "";
+    rowCountBadge.innerText = `${rowsArray.length} Data Ditemukan`;
 
-            fallback.classList.add('hidden');
+    if (rowsArray.length === 0) {
+        fallback.classList.remove('hidden');
+        return;
+    }
 
-            const headers = window.DynamicHeaders || Object.keys(rowsArray[0]);
+    fallback.classList.add('hidden');
 
-            let theadHTML = '<tr class="bg-slate-100/70 text-slate-600 text-xs uppercase font-bold tracking-wider border-b border-slate-200">';
-            headers.forEach(h => {
-            theadHTML += `<th class="p-4 whitespace-nowrap">${h}</th>`;
-});
-}
+    const headers = window.DynamicHeaders || Object.keys(rowsArray[0]);
+
+    let theadHTML = '<tr class="bg-slate-100/70 text-slate-600 text-xs uppercase font-bold tracking-wider border-b border-slate-200">';
+
+    headers.forEach(h => {
+        theadHTML += `<th class="p-4 whitespace-nowrap">${h}</th>`;
+    });
+
+    theadHTML += '</tr>';
+
+    table.querySelector('thead').innerHTML = theadHTML;
+
+    const limitList = rowsArray.slice(0, 100);
+
+    limitList.forEach(row => {
+
+        let tr = '<tr class="hover:bg-slate-50/80 transition-colors duration-150 border-b border-slate-100">';
+
+        headers.forEach(header => {
+
+            const rawValue = row[header] !== undefined ? row[header] : '';
+
+            tr += `
+            <td class="p-4 text-sm text-slate-700">
+                ${rawValue}
+            </td>`;
+
+        });
+
+        tr += '</tr>';
+
+        tbody.innerHTML += tr;
+
+    });
+
+} // <-- PENUTUP renderTableDataGrid ADA DI SINI
 theadHTML += '</tr>';
 table.querySelector('thead').innerHTML = theadHTML;
 const limitList = rowsArray.slice(0, 100);
