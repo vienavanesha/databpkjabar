@@ -1037,26 +1037,12 @@ limitList.forEach(row => {
 
     headers.forEach(header => {
 
-        const rawValue = row[header] !== undefined ? row[header] : '';
-		console.log(header, rawValue);
+const rawValue = row[header] !== undefined ? row[header] : '';
 
-        let displayValue = String(rawValue);
-
-        if (
-            typeof rawValue === 'string' &&
-            rawValue.length > 120
-        ) {
-            displayValue = rawValue.substring(0, 120) + '...';
-        }
-
-        displayValue = makeLinksClickable(displayValue);
-
-        tr += `
-        <td
-            class="p-4 max-w-xs text-sm text-slate-700 break-words"
-            title="${String(rawValue).replace(/"/g, '&quot;')}">
-            ${displayValue}
-        </td>`;
+tr += `
+<td class="p-4 text-sm text-slate-700">
+    ${rawValue}
+</td>`;
 
     });
 
