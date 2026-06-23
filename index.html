@@ -1039,26 +1039,24 @@ limitList.forEach(row => {
 
     let tr = '<tr class="hover:bg-slate-50/80 transition-colors duration-150 border-b border-slate-100">';
 
-    headers.forEach(header => {
+headers.forEach(header => {
 
     const rawValue = row[header] !== undefined ? row[header] : '';
 
-    let cellClass = "p-4 text-sm text-slate-700 align-top";
-
-    if (
-        header.toLowerCase().includes('deskripsi')
-    ) {
-        cellClass += " break-words max-w-md text-justify";
-    }
-
     tr += `
-    <td class="${cellClass}">
+    <td class="p-4 text-sm text-slate-700 align-top break-words">
         ${rawValue}
     </td>`;
 
 });
 
-} // <-- PENUTUP renderTableDataGrid ADA DI SINI
+    tr += '</tr>';
+
+    tbody.innerHTML += tr;
+
+});
+
+} // <-- PENUTUP renderTableDataGrid
 
         function filterTableData() {
             const searchQuery = document.getElementById('table-search-input').value.toLowerCase();
