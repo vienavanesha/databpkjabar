@@ -1060,21 +1060,19 @@ headers.forEach(header => {
     let cellStyle = "";
 
     if (header.toLowerCase().includes('deskripsi')) {
-        cellStyle = 'style="min-width:600px;"';
+        cellStyle = 'style="min-width:650px;"';
     }
     else if (header.toLowerCase().includes('sk')) {
-        cellStyle = 'style="width:120px;"';
+        cellStyle = 'style="width:80px;"';
+    }
+    else if (header.toLowerCase().includes('dokumentasi')) {
+        cellStyle = 'style="width:90px;"';
     }
 
     tr += `
     <td class="p-4 text-sm text-slate-700 align-top break-words" ${cellStyle}>
         ${rawValue}
     </td>`;
-
-});
-    tr += '</tr>';
-
-    tbody.innerHTML += tr;
 
 });
 
