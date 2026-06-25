@@ -827,6 +827,11 @@ window.onload = async function() {
 
         async function openDatabaseViewPage(id) {
             currentActiveDatabaseId = id;
+			history.pushState(
+    { page: "database" },
+    "",
+    "#database"
+);
             const dbObj = CONFIG.databases.find(d => d.id === id);
             
             document.getElementById('view-dashboard').classList.add('hidden');
