@@ -565,6 +565,18 @@ window.onload = async function() {
     document.getElementById('cfg-color-secondary').addEventListener('input', (e) => {
         document.getElementById('cfg-color-secondary-text').value = e.target.value;
     });
+window.onpopstate = function () {
+
+    if (window.location.hash === "#database") {
+
+        // Tetap di halaman database
+        return;
+
+    }
+
+    showDashboard();
+
+};
 
 };
 	function loadConfigFromLocalStorage() {
@@ -820,6 +832,14 @@ window.onload = async function() {
         function showDashboard() {
             document.getElementById('view-dashboard').classList.remove('hidden');
             document.getElementById('view-database-page').classList.add('hidden');
+			
+			 history.replaceState(
+             { page: "dashboard" },
+             "",
+			window.location.pathname
+		);
+
+			
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
