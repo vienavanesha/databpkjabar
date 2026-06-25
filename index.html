@@ -1092,11 +1092,13 @@ limitList.forEach(row => {
 
     tr += '</tr>';
 
-    tbody.innerHTML += tr;
+  tbody.innerHTML += tr;
 
 });
 
-        function filterTableData() {
+} // <-- PENUTUP renderTableDataGrid
+
+		function filterTableData() {
             const searchQuery = document.getElementById('table-search-input').value.toLowerCase();
             const filterKab = document.getElementById('table-filter-kab').value;
             const filterJenis = document.getElementById('table-filter-jenis').value;
