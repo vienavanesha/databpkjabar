@@ -1057,16 +1057,30 @@ limitList.forEach(row => {
 
         const rawValue = row[header] !== undefined ? row[header] : '';
 
+        const lowerHeader = header.toLowerCase();
+
         let cellStyle = "";
 
-        if (header.toLowerCase().includes('deskripsi')) {
+        // ===== Pengaturan Lebar Kolom =====
+
+        if (lowerHeader.includes('deskripsi')) {
             cellStyle = 'style="min-width:650px;"';
         }
-        else if (header.toLowerCase().includes('sk')) {
-            cellStyle = 'style="width:30px;"';
+
+        else if (lowerHeader.includes('nama maestro')) {
+            cellStyle = 'style="width:140px;"';
         }
-        else if (header.toLowerCase().includes('dokumentasi')) {
-            cellStyle = 'style="width:30px;"';
+
+        else if (lowerHeader.includes('komunitas')) {
+            cellStyle = 'style="width:140px;"';
+        }
+
+        else if (lowerHeader.includes('dokumentasi')) {
+            cellStyle = 'style="width:25px;"';
+        }
+
+        else if (lowerHeader.includes('sk')) {
+            cellStyle = 'style="width:25px;"';
         }
 
         tr += `
@@ -1081,8 +1095,6 @@ limitList.forEach(row => {
     tbody.innerHTML += tr;
 
 });
-
-} // <-- PENUTUP renderTableDataGrid
 
         function filterTableData() {
             const searchQuery = document.getElementById('table-search-input').value.toLowerCase();
