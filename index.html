@@ -1165,7 +1165,23 @@ function renderGlobalSearchResult(results){
 
     }
 
-    container.innerHTML = html;
+container.innerHTML = html;
+
+container.querySelectorAll(".search-result-item")
+.forEach(item=>{
+
+    item.addEventListener("click",function(){
+
+        const dbId = this.dataset.db;
+		
+		container.classList.add("hidden");
+        container.innerHTML = "";
+		
+        openDatabaseViewPage(dbId);
+
+    });
+
+});
 
 }
 
