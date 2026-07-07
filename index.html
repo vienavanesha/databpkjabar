@@ -1178,16 +1178,25 @@ container.innerHTML = html;
 container.querySelectorAll(".search-result-item")
 .forEach(item=>{
 
-    item.addEventListener("click",function(){
+item.addEventListener("click", async function(){
 
-        const dbId = this.dataset.db;
-		
-		container.classList.add("hidden");
-        container.innerHTML = "";
-		
-        openDatabaseViewPage(dbId);
+    const dbId = this.dataset.db;
 
-    });
+    const keyword = this.dataset.name;
+
+    container.classList.add("hidden");
+    container.innerHTML = "";
+
+    await openDatabaseViewPage(dbId);
+
+    const searchInput =
+        document.getElementById("table-search-input");
+
+    searchInput.value = keyword;
+
+    filterTableData();
+
+});
 
 });
 
