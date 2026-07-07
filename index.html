@@ -641,9 +641,9 @@ if(globalSearchInput){
 
             const keyword = this.value;
 
-            const result = searchGlobalData(keyword);
+			const result = searchGlobalData(keyword);
 
-            console.log(result);
+			renderGlobalSearchResult(result);
 
         },250)
 
@@ -1089,6 +1089,83 @@ function debounce(func, delay){
         },delay);
 
     }
+
+}
+
+function renderGlobalSearchResult(results){
+
+    const container =
+        document.getElementById("global-search-result");
+
+    if(!container) return;
+
+    if(results.length === 0){
+
+        container.classList.add("hidden");
+        container.innerHTML = "";
+
+        return;
+
+    }
+
+    container.classList.remove("hidden");
+
+    let html = "";
+
+    const limit = results.slice(0,20);
+
+    limit.forEach(item=>{
+
+       html += `
+
+<div
+    class="search-result-item border-b border-slate-100 p-4 hover:bg-slate-50 cursor-pointer transition"
+    data-db="${item.databaseId}"
+    data-name="${item.nama}">
+
+    <div class="font-semibold text-slate-800">
+
+        ${item.nama || "-"}
+
+    </div>
+
+    <div class="text-xs text-slate-500 mt-1">
+
+        <span class="inline-block bg-amber-100 text-amber-700 px-2 py-1 rounded-full mr-2">
+
+            ${item.databaseName}
+
+        </span>
+
+        ${item.jenis || "-"}
+
+        •
+
+        ${item.lokasi || "-"}
+
+    </div>
+
+</div>
+
+`;
+
+    });
+
+    if(results.length>20){
+
+        html += `
+
+        <div class="text-center text-xs text-slate-500 p-3 bg-slate-50">
+
+            Menampilkan 20 dari ${results.length} hasil
+
+        </div>
+
+        `;
+
+    }
+
+    container.innerHTML = html;
 
 }
 
