@@ -1062,9 +1062,17 @@ function searchGlobalData(keyword){
 
     }
 
+    const words = keyword
+        .split(/\s+/)
+        .filter(Boolean);
+
     return GlobalSearchIndex.filter(item=>{
 
-        return item.searchText.includes(keyword);
+        return words.every(word=>
+
+            item.searchText.includes(word)
+
+        );
 
     });
 
