@@ -80,11 +80,8 @@
                 </div>
             </div>
 			
-			<h1 style="color:red;font-size:50px;">
-TEST TEST TEST
-</h1>
 
-<!-- ================= GLOBAL SEARCH ================= -->
+<!-- ================= GLOBAL SEARCH UI ================= -->
 
 <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 space-y-4">
 
@@ -692,26 +689,70 @@ window.onpopstate = function () {
             });
         }
 
-        function fetchAllSpreadsheetsCountsInBackground() {
-            CONFIG.databases.forEach((db) => {
-                if(db.url && db.url.trim() !== "") {
-                    fetch(db.url)
-                        .then(response => response.text())
-                        .then(csvText => {
-                            const lines = parseCSVRowsArray(csvText);
-                            if(lines.length > 1) {
-                                const validRowsCount = lines.length - 1; 
-                                db.count = validRowsCount;
-                                const counterEl = document.getElementById(`counter-val-${db.id}`);
-                                if(counterEl) {
-                                    counterEl.innerHTML = `${validRowsCount.toLocaleString('id-ID')} <span class="text-xs text-slate-400 font-normal">Item</span>`;
-                                }
-                            }
-                        })
-                        .catch(err => console.error(`Gagal menghitung otomatis latar belakang spreadsheet ${db.name}:`, err));
-                }
-            });
+function fetchAllSpreadsheetsCountsInBackground() {
+    GlobalSearchIndex = [];
+	GlobalSearchReady = false;
+	CONFIG.databases.forEach((db) => {
+
+        if(db.url && db.url.trim() !== "") {
+
+            fetch(db.url)
+                .then(response => response.text())
+                .then(csvText => {
+
+                    const lines = parseCSVRowsArray(csvText);
+                    const headers = lines[0].map(h => (h || "").trim());
+
+                    if(lines.length > 1) {
+
+                        const validRowsCount = lines.length - 1;
+
+// ================= BUILD GLOBAL SEARCH INDEX =================
+
+                        for (let i = 1; i < lines.length; i++) {
+
+                            const cols = lines[i];
+
+                            if (cols.join("").trim() === "") continue;
+
+                            const rowObj = {};
+
+                            headers.forEach((header, idx) => {
+                                rowObj[header] = (cols[idx] || "").trim();
+                            });
+
+                            GlobalSearchIndex.push(
+
+							createSearchIndexItem(
+							db,
+							rowObj
+							)
+
+							);
+
+                        }
+
+                        // ===========================================================
+
+                        db.count = validRowsCount;
+
+                        const counterEl = document.getElementById(`counter-val-${db.id}`);
+
+                        if(counterEl) {
+                            counterEl.innerHTML =
+                                `${validRowsCount.toLocaleString('id-ID')}
+                                <span class="text-xs text-slate-400 font-normal">Item</span>`;
+                        }
+
+                    }
+
+                })
+                .catch(err => console.error(`Gagal menghitung otomatis latar belakang spreadsheet ${db.name}:`, err));
+
         }
+
+    });
+}
 
         // ================= GALLERY CAROUSEL INTERFACES ENGINE =================
         function transformDirectImageUrl(url) {
@@ -890,7 +931,81 @@ window.onpopstate = function () {
         }
 
         let ActiveTableRowsData = [];
-		let GlobalSearchIndex = [];
+		
+		// Menyimpan seluruh data dari semua database
+// ================= GLOBAL SEARCH ENGINE =================
+
+let GlobalSearchIndex = [];
+
+let GlobalSearchReady = false;
+
+const SEARCH_FIELD_MAP = {
+
+    nama: [
+        "Nama",
+        "Nama Karya Budaya",
+        "Karya Budaya"
+    ],
+
+    jenis: [
+        "Jenis",
+        "Jenis / Domain"
+    ],
+
+    lokasi: [
+        "Kab/Kota"
+    ],
+
+    deskripsi: [
+        "Deskripsi",
+        "Deskripsi Singkat"
+    ]
+
+};
+
+// ================================================
+function getField(row, aliases){
+
+    for(const alias of aliases){
+
+        if(row[alias] && row[alias] !== ""){
+
+            return String(row[alias]).trim();
+
+        }
+
+    }
+
+    return "";
+
+}
+
+function createSearchIndexItem(db,row){
+
+    return{
+
+        databaseId : db.id,
+
+        databaseName : db.name,
+
+        nama : getField(row,SEARCH_FIELD_MAP.nama),
+
+        jenis : getField(row,SEARCH_FIELD_MAP.jenis),
+
+        lokasi : getField(row,SEARCH_FIELD_MAP.lokasi),
+
+        deskripsi : getField(row,SEARCH_FIELD_MAP.deskripsi),
+
+        searchText : Object.values(row)
+            .join(" ")
+            .toLowerCase(),
+
+        rowData : row
+
+    };
+
+}
+
 
         async function openDatabaseViewPage(id) {
             currentActiveDatabaseId = id;
@@ -965,6 +1080,20 @@ window.onpopstate = function () {
                 ActiveTableRowsData.push(rowObj);
             }
         }
+
+		// ======================================================
+// TODO:
+// Fungsi ini sudah tidak digunakan lagi.
+//
+// Proses pembuatan Global Search Index sekarang dilakukan
+// langsung di fetchAllSpreadsheetsCountsInBackground().
+// Dipertahankan sementara selama proses pengembangan.
+// Nanti akan dihapus pada Patch Finishing.
+// ======================================================
+
+async function buildGlobalSearchIndex() {
+    // Deprecated
+}
 
         function parseCSVRowsArray(text) {
             let p = '', r = [];
@@ -1691,6 +1820,7 @@ if (configSnap.exists()) {
 	startAutoSlideShow();
 
     fetchAllSpreadsheetsCountsInBackground();
+	await buildGlobalSearchIndex();
 
 }
 
