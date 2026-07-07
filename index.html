@@ -620,6 +620,36 @@ window.onpopstate = function () {
     showDashboard();
 
 };
+const globalSearchInput =
+document.getElementById("global-search-input");
+
+if(globalSearchInput){
+
+    globalSearchInput.addEventListener(
+
+        "input",
+
+        debounce(function(){
+
+            if(!GlobalSearchIndex.length){
+
+                console.log("Global Search belum siap.");
+
+                return;
+
+            }
+
+            const keyword = this.value;
+
+            const result = searchGlobalData(keyword);
+
+            console.log(result);
+
+        },250)
+
+    );
+
+}
 
 };
 	function loadConfigFromLocalStorage() {
@@ -1003,6 +1033,49 @@ function createSearchIndexItem(db,row){
         rowData : row
 
     };
+
+}
+
+
+// ================= LIVE SEARCH =================
+
+function searchGlobalData(keyword){
+
+    keyword = keyword.trim().toLowerCase();
+
+    if(keyword.length < 2){
+
+        return [];
+
+    }
+
+    return GlobalSearchIndex.filter(item=>{
+
+        return item.searchText.includes(keyword);
+
+    });
+
+}
+
+function debounce(func, delay){
+
+    let timer;
+
+    return function(){
+
+        const context = this;
+
+        const args = arguments;
+
+        clearTimeout(timer);
+
+        timer = setTimeout(()=>{
+
+            func.apply(context,args);
+
+        },delay);
+
+    }
 
 }
 
