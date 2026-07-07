@@ -1012,23 +1012,36 @@ function getField(row, aliases){
 
 function createSearchIndexItem(db,row){
 
+    const nama =
+        getField(row, SEARCH_FIELD_MAP.nama);
+
+    const jenis =
+        getField(row, SEARCH_FIELD_MAP.jenis);
+
+    const lokasi =
+        getField(row, SEARCH_FIELD_MAP.lokasi);
+
     return{
 
         databaseId : db.id,
 
         databaseName : db.name,
 
-        nama : getField(row,SEARCH_FIELD_MAP.nama),
+        nama,
 
-        jenis : getField(row,SEARCH_FIELD_MAP.jenis),
+        jenis,
 
-        lokasi : getField(row,SEARCH_FIELD_MAP.lokasi),
+        lokasi,
 
-        deskripsi : getField(row,SEARCH_FIELD_MAP.deskripsi),
+        searchText : [
 
-        searchText : Object.values(row)
-            .join(" ")
-            .toLowerCase(),
+            nama,
+
+            jenis,
+
+            lokasi
+
+        ].join(" ").toLowerCase(),
 
         rowData : row
 
