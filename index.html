@@ -109,7 +109,7 @@
             id="global-search-input"
             type="text"
             autocomplete="off"
-            placeholder="Cari nama objek, lokasi, jenis, maestro, komunitas, nomor SK..."
+            placeholder="Cari nama objek, lokasi, jenis,..."
             class="w-full rounded-2xl border border-slate-300 pl-14 pr-4 py-4 text-base focus:outline-none focus:ring-4 focus:ring-amber-200 focus:border-amber-500 transition">
 
     </div>
@@ -270,7 +270,7 @@
     </main>
 
     <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 text-center py-6 text-xs mt-12">
-        <p>&copy; 2026 Balai Pelestarian Kebudayaan. UPT Kementerian Kebudayaan Republik Indonesia. Seluruh hak cipta dilindungi undang-undang.</p>
+        <p>&copy; 2026 BP Kebudayaan Jawa Barat. UPT Kementerian Kebudayaan Republik Indonesia.</p>
         <p class="text-slate-600 mt-1">Sistem Arsitektur Dinamis Terintegrasi Spreadsheet Cloud Server - Bebas Bug Jangka Panjang</p>
     </footer>
 
@@ -710,7 +710,7 @@ if(globalSearchInput){
                             <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 group-hover:bg-amber-100 group-hover:text-amber-800 transition-colors">Buka Data <i class="fa-solid fa-chevron-right ml-0.5"></i></span>
                         </div>
                         <div class="mt-4 relative z-10">
-                            <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 truncate">${db.name}</h4>
+                            <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 leading-5 whitespace-normal">${db.name}</h4>
                             <p class="text-3xl font-bold text-slate-900 mt-1 tracking-tight" id="counter-val-${db.id}">${db.count.toLocaleString('id-ID')} <span class="text-xs text-slate-400 font-normal">Item</span></p>
                         </div>
                     </div>
@@ -720,11 +720,20 @@ if(globalSearchInput){
         }
 
 function fetchAllSpreadsheetsCountsInBackground() {
-    GlobalSearchIndex = [];
-	GlobalSearchReady = false;
-	CONFIG.databases.forEach((db) => {
 
-        if(db.url && db.url.trim() !== "") {
+    // Reset Search Index
+    GlobalSearchIndex = [];
+
+    // Status loading Search
+    GlobalSearchReady = false;
+
+    CONFIG.databases.forEach((db) => {
+
+        const hasSpreadsheet =
+    db.url &&
+    db.url.trim() !== "";
+
+if(hasSpreadsheet){
 
             fetch(db.url)
                 .then(response => response.text())
@@ -736,6 +745,10 @@ function fetchAllSpreadsheetsCountsInBackground() {
                     if(lines.length > 1) {
 
                         const validRowsCount = lines.length - 1;
+						const counterEl =
+							document.getElementById(
+								`counter-val-${db.id}`
+						);
 
 // ================= BUILD GLOBAL SEARCH INDEX =================
 
@@ -765,9 +778,6 @@ function fetchAllSpreadsheetsCountsInBackground() {
                         // ===========================================================
 
                         db.count = validRowsCount;
-
-                        const counterEl = document.getElementById(`counter-val-${db.id}`);
-
                         if(counterEl) {
                             counterEl.innerHTML =
                                 `${validRowsCount.toLocaleString('id-ID')}
