@@ -1377,6 +1377,41 @@ async function buildGlobalSearchIndex() {
             return text;
         }
 
+// ================= CELL VALUE RENDERING (SUPPORT LINK KLIK: SK, DOKUMENTASI, DLL) =================
+
+/**
+ * Meng-escape karakter HTML agar nilai dari spreadsheet tidak bisa
+ * menyuntikkan tag/atribut HTML saat dimasukkan lewat innerHTML.
+ */
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+/**
+ * Mengubah URL (termasuk link Google Drive/Docs) di dalam teks sel tabel
+ * menjadi tombol link yang bisa diklik dan terbuka di tab baru.
+ * Teks lain di sekitar URL tetap tampil apa adanya (sudah di-escape).
+ */
+function linkifyCellValue(rawValue) {
+    if (!rawValue) return "";
+
+    const escaped = escapeHtml(rawValue);
+    const urlRegex = /(https?:\/\/[^\s,]+)/g;
+
+    return escaped.replace(urlRegex, (url) => {
+        const isDrive = url.includes('drive.google.com') || url.includes('docs.google.com');
+        const label = isDrive ? 'Lihat Dokumen' : 'Buka Tautan';
+        const icon = isDrive ? 'fa-solid fa-file-lines' : 'fa-solid fa-up-right-from-square';
+
+        return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0c2340] bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-full transition whitespace-nowrap"><i class="${icon}"></i>${label}</a>`;
+    });
+}
+
 function renderTableDataGrid(rowsArray) {
 
     const tbody = document.getElementById('main-table-body');
@@ -1444,7 +1479,7 @@ limitList.forEach(row => {
 
         tr += `
         <td class="p-4 text-sm text-slate-700 align-top break-words" ${cellStyle}>
-            ${rawValue}
+            ${linkifyCellValue(rawValue)}
         </td>`;
 
     });
