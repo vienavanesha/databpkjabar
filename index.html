@@ -1412,6 +1412,31 @@ function linkifyCellValue(rawValue) {
     });
 }
 
+/**
+ * Toggle tampil/sembunyikan teks deskripsi lengkap pada tabel data.
+ * Dipanggil dari tombol "Lihat selengkapnya" / "Sembunyikan" di setiap sel deskripsi.
+ */
+function toggleDescription(btn) {
+    const wrapper = btn.closest('.desc-cell');
+    const fullEl = wrapper.querySelector('.desc-full');
+    const labelEl = wrapper.querySelector('.desc-toggle-label');
+    const iconEl = wrapper.querySelector('.desc-toggle-icon');
+
+    const isExpanded = !fullEl.classList.contains('hidden');
+
+    if (isExpanded) {
+        fullEl.classList.add('hidden');
+        labelEl.textContent = 'Lihat selengkapnya';
+        iconEl.classList.remove('fa-chevron-up');
+        iconEl.classList.add('fa-chevron-down');
+    } else {
+        fullEl.classList.remove('hidden');
+        labelEl.textContent = 'Sembunyikan';
+        iconEl.classList.remove('fa-chevron-down');
+        iconEl.classList.add('fa-chevron-up');
+    }
+}
+
 function renderTableDataGrid(rowsArray) {
 
     const tbody = document.getElementById('main-table-body');
@@ -1455,10 +1480,25 @@ limitList.forEach(row => {
 
         let cellStyle = "";
 
+        let cellContent;
+
         // ===== Pengaturan Lebar Kolom =====
 
         if (lowerHeader.includes('deskripsi')) {
-            cellStyle = 'style="min-width:650px;"';
+            cellStyle = 'style="width:200px;"';
+
+            if (!rawValue || String(rawValue).trim() === '') {
+                cellContent = '<span class="text-slate-400 text-xs">-</span>';
+            } else {
+                cellContent = `
+                <div class="desc-cell">
+                    <button type="button" onclick="toggleDescription(this)" class="desc-toggle-btn inline-flex items-center gap-1.5 text-xs font-semibold text-[#0c2340] bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-full transition whitespace-nowrap">
+                        <i class="fa-solid fa-chevron-down desc-toggle-icon"></i>
+                        <span class="desc-toggle-label">Lihat selengkapnya</span>
+                    </button>
+                    <div class="desc-full hidden mt-2 text-sm text-slate-700 leading-relaxed whitespace-pre-line">${linkifyCellValue(rawValue)}</div>
+                </div>`;
+            }
         }
 
         else if (lowerHeader.includes('nama maestro')) {
@@ -1477,9 +1517,13 @@ limitList.forEach(row => {
             cellStyle = 'style="width:25px;"';
         }
 
+        if (cellContent === undefined) {
+            cellContent = linkifyCellValue(rawValue);
+        }
+
         tr += `
         <td class="p-4 text-sm text-slate-700 align-top break-words" ${cellStyle}>
-            ${linkifyCellValue(rawValue)}
+            ${cellContent}
         </td>`;
 
     });
