@@ -232,7 +232,7 @@
                     <span id="table-rows-count" class="text-xs bg-slate-200 text-slate-700 font-semibold px-2.5 py-1 rounded-full">0 Data Ditemukan</span>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse" id="main-data-table">
+                    <table class="w-full text-left border-collapse table-fixed" id="main-data-table">
                         <thead>
                             <tr class="bg-slate-100/70 text-slate-600 text-xs uppercase font-bold tracking-wider border-b border-slate-200">
                                 <th class="p-4 w-16 text-center">No</th>
@@ -1437,6 +1437,29 @@ function toggleDescription(btn) {
     }
 }
 
+/**
+ * Menentukan lebar kolom tabel berdasarkan nama header, dipakai konsisten
+ * di <thead> maupun <tbody> supaya seluruh database (kab/kota, nasional, dst)
+ * tampil seragam dan rapi, tidak tergantung isi datanya masing-masing.
+ */
+function getColumnWidthStyle(header) {
+    const h = header.toLowerCase().trim();
+
+    if (h === 'no' || h === 'no.') return 'width:56px;';
+    if (h === 'sk') return 'width:130px;';                 // tombol "Lihat Dokumen"
+    if (h.includes('no. sk') || h.includes('no sk') || h.includes('nomor sk')) return 'width:240px;'; // teks nomor SK
+    if (h.includes('deskripsi')) return 'width:170px;';    // tombol "Lihat selengkapnya"
+    if (h.includes('dokumentasi')) return 'width:130px;';  // tombol link dokumentasi
+    if (h.includes('nama maestro')) return 'width:160px;';
+    if (h.includes('komunitas')) return 'width:160px;';
+    if (h.includes('nama')) return 'width:240px;';
+    if (h.includes('jenis')) return 'width:110px;';
+    if (h.includes('fungsi')) return 'width:110px;';
+    if (h.includes('kab') || h.includes('kota')) return 'width:130px;';
+
+    return 'width:150px;'; // default untuk kolom lain yang tidak dikenali
+}
+
 function renderTableDataGrid(rowsArray) {
 
     const tbody = document.getElementById('main-table-body');
@@ -1459,7 +1482,7 @@ function renderTableDataGrid(rowsArray) {
     let theadHTML = '<tr class="bg-slate-100/70 text-slate-600 text-xs uppercase font-bold tracking-wider border-b border-slate-200">';
 
     headers.forEach(h => {
-        theadHTML += `<th class="p-4 whitespace-nowrap text-center">${h}</th>`;
+        theadHTML += `<th class="p-4 whitespace-nowrap text-center" style="${getColumnWidthStyle(h)}">${h}</th>`;
     });
 
     theadHTML += '</tr>';
@@ -1478,15 +1501,11 @@ limitList.forEach(row => {
 
         const lowerHeader = header.toLowerCase();
 
-        let cellStyle = "";
+        let cellStyle = `style="${getColumnWidthStyle(header)}"`;
 
         let cellContent;
 
-        // ===== Pengaturan Lebar Kolom =====
-
         if (lowerHeader.includes('deskripsi')) {
-            cellStyle = 'style="width:200px;"';
-
             if (!rawValue || String(rawValue).trim() === '') {
                 cellContent = '<span class="text-slate-400 text-xs">-</span>';
             } else {
@@ -1499,22 +1518,6 @@ limitList.forEach(row => {
                     <div class="desc-full hidden mt-2 text-sm text-slate-700 leading-relaxed whitespace-pre-line">${linkifyCellValue(rawValue)}</div>
                 </div>`;
             }
-        }
-
-        else if (lowerHeader.includes('nama maestro')) {
-            cellStyle = 'style="width:140px;"';
-        }
-
-        else if (lowerHeader.includes('komunitas')) {
-            cellStyle = 'style="width:140px;"';
-        }
-
-        else if (lowerHeader.includes('dokumentasi')) {
-            cellStyle = 'style="width:25px;"';
-        }
-
-        else if (lowerHeader.includes('sk')) {
-            cellStyle = 'style="width:25px;"';
         }
 
         if (cellContent === undefined) {
