@@ -1456,6 +1456,12 @@ function getColumnWidthStyle(header) {
     if (h.includes('jenis')) return 'width:110px;';
     if (h.includes('fungsi')) return 'width:110px;';
     if (h.includes('kab') || h.includes('kota')) return 'width:130px;';
+    if (h.includes('usia karya')) return 'width:120px;';
+    if (h.includes('kondisi karya')) return 'width:130px;';
+    if (h.includes('unsur pemajuan')) return 'width:150px;';
+    if (h.includes('judul kegiatan')) return 'width:220px;';
+    if (h.includes('lokasi')) return 'width:160px;';
+    if (h.includes('tahun')) return 'width:100px;';
 
     return 'width:150px;'; // default untuk kolom lain yang tidak dikenali
 }
@@ -1482,7 +1488,7 @@ function renderTableDataGrid(rowsArray) {
     let theadHTML = '<tr class="bg-slate-100/70 text-slate-600 text-xs uppercase font-bold tracking-wider border-b border-slate-200">';
 
     headers.forEach(h => {
-        theadHTML += `<th class="p-4 whitespace-nowrap text-center" style="${getColumnWidthStyle(h)}">${h}</th>`;
+        theadHTML += `<th class="p-4 text-center align-middle break-words leading-snug" style="${getColumnWidthStyle(h)}">${h}</th>`;
     });
 
     theadHTML += '</tr>';
