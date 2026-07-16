@@ -190,6 +190,12 @@
                 <span>Kembali ke Dashboard Utama</span>
             </button>
 
+            <!-- Identitas database: tetap terlihat saat halaman di-scroll ke bawah -->
+            <div id="db-sticky-identity" class="sticky top-24 z-30 bg-white/95 backdrop-blur-sm rounded-2xl px-5 py-3 shadow-sm border border-slate-100 flex items-center gap-2.5">
+                <i class="fa-solid fa-database text-[#0c2340] text-sm shrink-0"></i>
+                <span id="db-sticky-title" class="text-sm font-bold text-slate-800 truncate">Nama Halaman Data</span>
+            </div>
+
             <!-- Responsif filter area -->
             <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4">
                 <div class="min-w-0 flex-1">
@@ -1177,6 +1183,7 @@ item.addEventListener("click", async function(){
             document.getElementById('view-dashboard').classList.add('hidden');
             document.getElementById('view-database-page').classList.remove('hidden');
             document.getElementById('db-page-title').innerText = dbObj ? dbObj.name : "Lembar Eksplorasi Data";
+            document.getElementById('db-sticky-title').innerText = dbObj ? dbObj.name : "Lembar Eksplorasi Data";
 
             document.getElementById('table-search-input').value = "";
 
@@ -1438,6 +1445,20 @@ function toggleDescription(btn) {
 }
 
 /**
+ * Daftar kolom yang kontennya disembunyikan di balik tombol
+ * "Lihat selengkapnya" (sama seperti kolom Deskripsi), supaya teks panjang
+ * tidak membuat tabel berantakan.
+ */
+function isExpandableTextColumn(lowerHeader) {
+    return lowerHeader.includes('deskripsi')
+        || lowerHeader.includes('nama maestro')
+        || lowerHeader.includes('komunitas')
+        || lowerHeader.includes('judul kegiatan')
+        || lowerHeader.includes('tim penulis')
+        || lowerHeader.includes('keterangan singkat');
+}
+
+/**
  * Menentukan lebar kolom tabel berdasarkan nama header, dipakai konsisten
  * di <thead> maupun <tbody> supaya seluruh database (kab/kota, nasional, dst)
  * tampil seragam dan rapi, tidak tergantung isi datanya masing-masing.
@@ -1448,10 +1469,9 @@ function getColumnWidthStyle(header) {
     if (h === 'no' || h === 'no.') return 'width:56px;';
     if (h === 'sk') return 'width:130px;';                 // tombol "Lihat Dokumen"
     if (h.includes('no. sk') || h.includes('no sk') || h.includes('nomor sk')) return 'width:240px;'; // teks nomor SK
-    if (h.includes('deskripsi')) return 'width:170px;';    // tombol "Lihat selengkapnya"
+    if (isExpandableTextColumn(h)) return 'width:170px;';  // semua kolom bertombol "Lihat selengkapnya"
     if (h.includes('dokumentasi')) return 'width:130px;';  // tombol link dokumentasi
-    if (h.includes('nama maestro')) return 'width:160px;';
-    if (h.includes('komunitas')) return 'width:160px;';
+    if (h.includes('nama lain')) return 'width:130px;';
     if (h.includes('nama')) return 'width:240px;';
     if (h.includes('jenis')) return 'width:110px;';
     if (h.includes('fungsi')) return 'width:110px;';
@@ -1459,7 +1479,6 @@ function getColumnWidthStyle(header) {
     if (h.includes('usia karya')) return 'width:120px;';
     if (h.includes('kondisi karya')) return 'width:130px;';
     if (h.includes('unsur pemajuan')) return 'width:150px;';
-    if (h.includes('judul kegiatan')) return 'width:220px;';
     if (h.includes('lokasi')) return 'width:160px;';
     if (h.includes('tahun')) return 'width:100px;';
 
@@ -1511,7 +1530,7 @@ limitList.forEach(row => {
 
         let cellContent;
 
-        if (lowerHeader.includes('deskripsi')) {
+        if (isExpandableTextColumn(lowerHeader)) {
             if (!rawValue || String(rawValue).trim() === '') {
                 cellContent = '<span class="text-slate-400 text-xs">-</span>';
             } else {
