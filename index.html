@@ -7,6 +7,7 @@
     <link id="dynamic-favicon" rel="icon" type="image/png" href="">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700&family=Playfair+Display:ital,wght=0,600;0,700;1,400&family=Montserrat:wght=400;500;600;700&family=Roboto:wght=400;500;700&display=swap" rel="stylesheet">
@@ -685,7 +686,16 @@ if(globalSearchInput){
                             <div class="p-3 rounded-xl bg-slate-50 text-[#0c2340] group-hover:bg-[#0c2340] group-hover:text-white transition-colors duration-300">
                                 <i class="fa-solid ${iconClass} text-xl"></i>
                             </div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 group-hover:bg-amber-100 group-hover:text-amber-800 transition-colors">Buka Data <i class="fa-solid fa-chevron-right ml-0.5"></i></span>
+                            <div class="flex items-center gap-1.5">
+                                <button
+                                    type="button"
+                                    onclick="downloadDatabaseAsExcel(event, '${db.id}')"
+                                    title="Download data ${db.name} (Excel)"
+                                    class="relative z-20 w-7 h-7 flex items-center justify-center rounded-full bg-slate-50 text-slate-400 hover:bg-emerald-100 hover:text-emerald-700 transition-colors duration-200">
+                                    <i class="fa-solid fa-file-excel text-xs"></i>
+                                </button>
+                                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 group-hover:bg-amber-100 group-hover:text-amber-800 transition-colors">Buka Data <i class="fa-solid fa-chevron-right ml-0.5"></i></span>
+                            </div>
                         </div>
                         <div class="mt-4 relative z-10">
                             <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 leading-5 whitespace-normal">${db.name}</h4>
@@ -1282,6 +1292,123 @@ async function buildGlobalSearchIndex() {
             }
             if (row.length > 1 || row[0] !== '') r.push(row);
             return r;
+        }
+
+        // ================= DOWNLOAD DATABASE KE EXCEL (.xlsx) =================
+
+        /**
+         * Diklik dari tombol ikon Excel pada card dashboard.
+         * Mengambil data database terkait (pakai data yang sudah termuat bila
+         * database itu yang sedang dibuka, atau fetch CSV baru bila belum),
+         * lalu mengunduhnya sebagai file Excel yang rapi.
+         */
+        async function downloadDatabaseAsExcel(event, dbId) {
+            if (event) event.stopPropagation();
+
+            const dbObj = CONFIG.databases.find(d => d.id === dbId);
+            if (!dbObj) {
+                alert("Database tidak ditemukan.");
+                return;
+            }
+
+            const btn = event ? event.currentTarget : null;
+            const originalHtml = btn ? btn.innerHTML : null;
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i>';
+            }
+
+            try {
+                let rows = [];
+                let headers = [];
+
+                if (dbId === currentActiveDatabaseId && Array.isArray(ActiveTableRowsData) && ActiveTableRowsData.length > 0) {
+                    // Database ini sedang terbuka & datanya sudah dimuat, tidak perlu fetch ulang
+                    rows = ActiveTableRowsData;
+                    headers = (window.DynamicHeaders && window.DynamicHeaders.length > 0)
+                        ? window.DynamicHeaders
+                        : Object.keys(rows[0] || {});
+                } else if (dbObj.url && dbObj.url.trim() !== "") {
+                    const response = await fetch(dbObj.url);
+                    if (!response.ok) throw new Error("Gagal memuat data dari Google Spreadsheet");
+                    const csvText = await response.text();
+                    const rawLines = parseCSVRowsArray(csvText);
+
+                    if (rawLines.length <= 1) throw new Error("Data pada spreadsheet kosong");
+
+                    headers = rawLines[0].map(h => (h || '').trim()).filter(h => h !== "");
+
+                    for (let i = 1; i < rawLines.length; i++) {
+                        const cols = rawLines[i];
+                        if (cols.join('').trim() === "") continue;
+
+                        const rowObj = {};
+                        headers.forEach((h, idx) => {
+                            rowObj[h] = (cols[idx] || '').trim();
+                        });
+                        rows.push(rowObj);
+                    }
+                } else {
+                    throw new Error("Database ini belum terhubung ke tautan spreadsheet.");
+                }
+
+                if (rows.length === 0) {
+                    alert("Tidak ada data untuk diunduh pada database ini.");
+                    return;
+                }
+
+                exportRowsToExcel(rows, headers, dbObj.name);
+
+            } catch (err) {
+                console.error("Gagal download Excel:", err);
+                alert("Gagal mengunduh data: " + err.message);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                }
+            }
+        }
+
+        /**
+         * Menyusun array data (array of object) menjadi file .xlsx yang rapi:
+         * urutan kolom sesuai header asli, lebar kolom otomatis menyesuaikan
+         * konten, baris header dibekukan, lalu langsung diunduh ke perangkat.
+         */
+        function exportRowsToExcel(rows, headers, dbName) {
+            const cleanHeaders = headers.filter(h => h && h.trim() !== "");
+
+            const orderedRows = rows.map(row => {
+                const ordered = {};
+                cleanHeaders.forEach(h => {
+                    ordered[h] = row[h] !== undefined ? row[h] : '';
+                });
+                return ordered;
+            });
+
+            const worksheet = XLSX.utils.json_to_sheet(orderedRows, { header: cleanHeaders });
+
+            // Lebar kolom otomatis menyesuaikan konten terpanjang (dibatasi agar tetap rapi)
+            worksheet['!cols'] = cleanHeaders.map(h => {
+                const maxLen = orderedRows.reduce((max, row) => {
+                    const val = row[h] ? String(row[h]) : '';
+                    return Math.max(max, val.length);
+                }, h.length);
+                return { wch: Math.min(Math.max(maxLen + 2, 10), 60) };
+            });
+
+            // Bekukan baris header supaya tetap terlihat saat scroll di Excel
+            worksheet['!freeze'] = { xSplit: 0, ySplit: 1 };
+
+            const workbook = XLSX.utils.book_new();
+            const sheetName = (dbName || 'Data').replace(/[\\\/\?\*\[\]:]/g, '').substring(0, 31) || 'Data';
+            XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+            const safeFileName = (dbName || 'Data').replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+
+            XLSX.writeFile(workbook, `${safeFileName}_${dateStr}.xlsx`);
         }
 
         function generateRealisticRowsDataset(id) {
