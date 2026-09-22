@@ -261,6 +261,7 @@
                     <i class="fa-solid fa-folder-open text-4xl"></i>
                     <p class="text-sm">Tidak ada baris data yang cocok dengan kriteria pencarian dan filter Anda.</p>
                 </div>
+                <div id="table-pagination-controls" class="px-6 py-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3"></div>
             </div>
         </div>
 
@@ -936,6 +937,11 @@ if(globalSearchInput){
         }
 
         let ActiveTableRowsData = [];
+
+        // ===== Paginasi tabel data =====
+        let currentTablePageRows = [];
+        let currentTablePageNumber = 1;
+        const TABLE_ROWS_PER_PAGE = 100;
 
         // Menyimpan seluruh data dari semua database
 // ================= GLOBAL SEARCH ENGINE =================
@@ -1730,8 +1736,12 @@ function renderTableDataGrid(rowsArray) {
     tbody.innerHTML = "";
     rowCountBadge.innerText = `${rowsArray.length} Data Ditemukan`;
 
+    currentTablePageRows = rowsArray;
+    currentTablePageNumber = 1;
+
     if (rowsArray.length === 0) {
         fallback.classList.remove('hidden');
+        renderTablePaginationControls();
         return;
     }
 
@@ -1749,7 +1759,26 @@ function renderTableDataGrid(rowsArray) {
 
     table.querySelector('thead').innerHTML = theadHTML;
 
-    const limitList = rowsArray.slice(0, 100);
+    renderTableBodyForCurrentPage();
+}
+
+function renderTableBodyForCurrentPage() {
+
+    const tbody = document.getElementById('main-table-body');
+    const rowsArray = currentTablePageRows;
+
+    if (rowsArray.length === 0) {
+        tbody.innerHTML = "";
+        renderTablePaginationControls();
+        return;
+    }
+
+    const headers = window.DynamicHeaders || Object.keys(rowsArray[0]);
+
+    const startIdx = (currentTablePageNumber - 1) * TABLE_ROWS_PER_PAGE;
+    const limitList = rowsArray.slice(startIdx, startIdx + TABLE_ROWS_PER_PAGE);
+
+    tbody.innerHTML = "";
 
 limitList.forEach(row => {
 
@@ -1797,7 +1826,69 @@ limitList.forEach(row => {
 
 });
 
-} // <-- PENUTUP renderTableDataGrid
+    renderTablePaginationControls();
+
+} // <-- PENUTUP renderTableBodyForCurrentPage
+
+function goToTablePage(pageNumber) {
+    const totalPages = Math.max(1, Math.ceil(currentTablePageRows.length / TABLE_ROWS_PER_PAGE));
+    currentTablePageNumber = Math.min(Math.max(1, pageNumber), totalPages);
+    renderTableBodyForCurrentPage();
+
+    const tableCard = document.getElementById('main-data-table');
+    if (tableCard) tableCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderTablePaginationControls() {
+    const container = document.getElementById('table-pagination-controls');
+    if (!container) return;
+
+    const totalRows = currentTablePageRows.length;
+    const totalPages = Math.max(1, Math.ceil(totalRows / TABLE_ROWS_PER_PAGE));
+
+    if (totalRows === 0 || totalPages <= 1) {
+        container.innerHTML = "";
+        return;
+    }
+
+    const startRow = (currentTablePageNumber - 1) * TABLE_ROWS_PER_PAGE + 1;
+    const endRow = Math.min(currentTablePageNumber * TABLE_ROWS_PER_PAGE, totalRows);
+
+    let html = `<span class="text-xs text-slate-500">Menampilkan ${startRow}–${endRow} dari ${totalRows} data</span>`;
+    html += `<div class="flex items-center gap-1.5">`;
+
+    html += `<button type="button" onclick="goToTablePage(${currentTablePageNumber - 1})" ${currentTablePageNumber === 1 ? 'disabled' : ''} class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition">
+        <i class="fa-solid fa-chevron-left"></i>
+    </button>`;
+
+    // Tampilkan maksimal 5 tombol nomor halaman di sekitar halaman aktif
+    let pageStart = Math.max(1, currentTablePageNumber - 2);
+    let pageEnd = Math.min(totalPages, pageStart + 4);
+    pageStart = Math.max(1, pageEnd - 4);
+
+    if (pageStart > 1) {
+        html += `<button type="button" onclick="goToTablePage(1)" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 transition">1</button>`;
+        if (pageStart > 2) html += `<span class="px-1 text-xs text-slate-400">…</span>`;
+    }
+
+    for (let p = pageStart; p <= pageEnd; p++) {
+        const isActive = p === currentTablePageNumber;
+        html += `<button type="button" onclick="goToTablePage(${p})" class="px-3 py-1.5 text-xs font-semibold rounded-lg border transition ${isActive ? 'bg-[#0c2340] border-[#0c2340] text-white' : 'border-slate-200 text-slate-600 hover:bg-slate-100'}">${p}</button>`;
+    }
+
+    if (pageEnd < totalPages) {
+        if (pageEnd < totalPages - 1) html += `<span class="px-1 text-xs text-slate-400">…</span>`;
+        html += `<button type="button" onclick="goToTablePage(${totalPages})" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 transition">${totalPages}</button>`;
+    }
+
+    html += `<button type="button" onclick="goToTablePage(${currentTablePageNumber + 1})" ${currentTablePageNumber === totalPages ? 'disabled' : ''} class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition">
+        <i class="fa-solid fa-chevron-right"></i>
+    </button>`;
+
+    html += `</div>`;
+
+    container.innerHTML = html;
+}
 
         function filterTableData() {
             const searchQuery = document.getElementById('table-search-input').value.toLowerCase();
