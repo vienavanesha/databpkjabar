@@ -1241,12 +1241,39 @@ item.addEventListener("click", async function(){
             window.DynamicHeaders = [];
 
             const rawLines = parseCSVRowsArray(csvText);
-            if (rawLines.length <= 1) return;
+            if (rawLines.length === 0) return;
 
-            const headers = rawLines[0].map(h => (h || '').trim());
+            // Cari baris header sesungguhnya: lewati baris judul/baris kosong di awal
+            // sheet (baris dengan <=1 sel terisi dianggap judul/baris kosong, bukan
+            // header kolom yang valid). Ini membuat sistem tetap bisa membaca sheet
+            // yang punya judul besar atau baris kosong sebelum header aslinya.
+            let headerRowIndex = 0;
+            while (
+                headerRowIndex < rawLines.length &&
+                rawLines[headerRowIndex].filter(c => (c || '').trim() !== '').length <= 1
+            ) {
+                headerRowIndex++;
+            }
+            if (headerRowIndex >= rawLines.length) return;
+
+            const headers = rawLines[headerRowIndex].map(h => (h || '').trim());
             window.DynamicHeaders = headers.filter(h => h !== "");
 
-            for (let i = 1; i < rawLines.length; i++) {
+            let startDataIndex = headerRowIndex + 1;
+
+            // Lewati baris "sub-label" tepat setelah header (mis. baris berisi
+            // "Pria/Wanita, Jalan/RT/RW, Kelurahan, Kecamatan" di bawah header Alamat
+            // yang merged-cell) -- dikenali dari kolom pertamanya kosong padahal
+            // baris itu sendiri tidak sepenuhnya kosong.
+            if (
+                startDataIndex < rawLines.length &&
+                (rawLines[startDataIndex][0] || '').trim() === '' &&
+                rawLines[startDataIndex].some(c => (c || '').trim() !== '')
+            ) {
+                startDataIndex++;
+            }
+
+            for (let i = startDataIndex; i < rawLines.length; i++) {
                 const columns = rawLines[i];
                 if (columns.join('').trim() === "") continue;
 
@@ -1661,7 +1688,6 @@ function toggleDescription(btn) {
 function isExpandableTextColumn(lowerHeader) {
     return lowerHeader.includes('deskripsi')
         || lowerHeader.includes('nama maestro')
-        || lowerHeader.includes('komunitas')
         || lowerHeader.includes('judul kegiatan')
         || lowerHeader.includes('tim penulis')
         || lowerHeader.includes('keterangan singkat');
@@ -1713,10 +1739,10 @@ function renderTableDataGrid(rowsArray) {
 
     const headers = window.DynamicHeaders || Object.keys(rowsArray[0]);
 
-    let theadHTML = '<tr class="bg-slate-100/70 text-slate-600 text-xs uppercase font-bold tracking-wider border-b border-slate-200">';
+    let theadHTML = '<tr class="bg-slate-100 text-slate-600 text-xs uppercase font-bold tracking-wider border-b border-slate-200">';
 
     headers.forEach(h => {
-        theadHTML += `<th class="p-4 text-center align-middle break-words leading-snug" style="${getColumnWidthStyle(h)}">${h}</th>`;
+        theadHTML += `<th class="p-4 text-center align-middle break-words leading-snug sticky top-36 z-20 bg-slate-100 shadow-sm" style="${getColumnWidthStyle(h)}">${h}</th>`;
     });
 
     theadHTML += '</tr>';
