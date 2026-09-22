@@ -2278,6 +2278,21 @@ saveConfigToFirebase();
 
             Object.assign(CONFIG, firebaseData);
 
+            // Jaga-jaga: jika konfigurasi Firebase (versi lama) belum memiliki
+            // kartu "Pelaku Budaya" / "Komunitas Budaya", tambahkan otomatis
+            // di sini lalu simpan balik ke Firebase supaya permanen.
+            const existingDbIds = CONFIG.databases.map(d => d.id);
+            let needsSeedSave = false;
+
+            if (!existingDbIds.includes('pelaku-budaya')) {
+                CONFIG.databases.push({ id: "pelaku-budaya", name: "Pelaku Budaya", count: 150, url: "" });
+                needsSeedSave = true;
+            }
+            if (!existingDbIds.includes('komunitas-budaya')) {
+                CONFIG.databases.push({ id: "komunitas-budaya", name: "Komunitas Budaya", count: 95, url: "" });
+                needsSeedSave = true;
+            }
+
             applyThemeStylesAndBranding();
             renderDashboardCards();
             initializeAllCarousels();
@@ -2285,6 +2300,15 @@ saveConfigToFirebase();
 
             fetchAllSpreadsheetsCountsInBackground();
             await buildGlobalSearchIndex();
+
+            if (needsSeedSave) {
+                try {
+                    await window.firebaseSetDoc(configRef, CONFIG);
+                    console.log("Kartu Pelaku Budaya & Komunitas Budaya berhasil ditambahkan otomatis ke Firebase.");
+                } catch (err) {
+                    console.error("Gagal menyimpan kartu baru ke Firebase secara otomatis:", err);
+                }
+            }
         }
 
         window.saveConfigToFirebase = async function() {
